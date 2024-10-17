@@ -19,12 +19,12 @@ Uporabna za timske športe kot so košarka, nogomet, odbojka, pa tudi individual
 
 **Opis mikrostoritev** 
 
-**Uporabniški račun
+**Uporabniški račun**
 
 
 
 
-**Orodja
+**Orodja**
 - Meaven
 - KumuluzEE
 - 
