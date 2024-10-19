@@ -34,7 +34,7 @@ Aplikacija poenostavi organizacijo in povezovanje športnih navdušencev ter ust
 
 Glavna opravila te mikrostoritve so kreacija, vračanje, posadabljanje in brisanje uporabniških računov. Prav tako ima storitev svojo podatkovno bazo kjer hrani vse atribute. Preko internega APIja komunicira s drugimi storitvami kot so; zemljevid športnih dogodkov, moj profil, admin panel,...
 
-Mikrostoritev bo preko Kafke ali RabbitMQ potekalo sporočanje drugim mikrostoritvam ko je uporabnik "online" in pripravljen za športanje. Viden bo tudi na zemljevidu.
+Mikrostoritev bo preko Kafke ali RabbitMQ omogočala sporočanje drugim mikrostoritvam, ko je uporabnik "online" in pripravljen za športanje. Viden bo tudi na zemljevidu.
 
 ###### Usvarjanje dogodkov ######
 
@@ -51,7 +51,7 @@ Omogočala bo tudi časovno razporejanje obvestil in sledenje komu so bila obves
 
 ###### MojProfil ######
 
-Mikrostoritev mojProfil bo zadolžena ze upravljanje s uporabniškim profilom znotraj sistema. Osredotočala se bo na spreminjanje obstoječega profila, nastavljanje preferenc, radiusa zaznavanja,...
+Mikrostoritev mojProfil bo zadolžena ze upravljanje z uporabniškim profilom znotraj sistema. Osredotočala se bo na spreminjanje obstoječega profila, nastavljanje preferenc, radiusa zaznavanja,...
 Komunicirala bo z isto bazo kot mikrostoritev za uporabniške račune.
 
 ###### Admin panel ######
