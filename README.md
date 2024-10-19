@@ -1,3 +1,5 @@
+## Greo spilat ##
+
 *Luka Kalšek, Luka Bele*, Luka^2
 *skupina 10*
 
@@ -27,41 +29,41 @@ Aplikacija poenostavi organizacijo in povezovanje športnih navdušencev ter ust
 - Nastavitve
 - Admin panel
 
-##### Opis mikrostoritev
-###### Uporabniški račun
+##### Opis mikrostoritev #####
+###### Uporabniški račun ######
 
 Glavna opravila te mikrostoritve so kreacija, vračanje, posadabljanje in brisanje uporabniških računov. Prav tako ima storitev svojo podatkovno bazo kjer hrani vse atribute. Preko internega APIja komunicira s drugimi storitvami kot so; zemljevid športnih dogodkov, moj profil, admin panel,...
 
 Mikrostoritev bo preko Kafke ali RabbitMQ potekalo sporočanje drugim mikrostoritvam ko je uporabnik "online" in pripravljen za športanje. Viden bo tudi na zemljevidu.
 
-###### Usvarjanje dogodkov
+###### Usvarjanje dogodkov ######
 
 Mikrostoritev skrbi za uporabniško kreirane dogodke, jih dodaja, spreminja in briše. Sodeluje tesno z mikrostoritvijo za obveščanje o dogodkih in povabilih ter zemljevidom športnih dogodkov. Možna je tudi izvedba ponavljajočih se dogodkov (nedeljska košarka). Storitev ima prav tako svojo podatkovno bazo interni API preko katerega komunicira s drugimi mikrostoritvami. 
 
-###### Zemljevid športnih dogodkov
+###### Zemljevid športnih dogodkov ######
 
 Zemljevid športnih dogodkov je zadolžena za prostorsko in lokacijsko prikazovanje dogodkov. Uporabnikom omogoča da dogodke najdejo in z njimi interaktirajo. Integrirala bo mapping API (GoogleMaps, OpenStreetMaps) in skrbela za querije in filtre iskanja ter vizualizacijo. 
 
-###### Obveščanje o novih dogodkih in povabila
+###### Obveščanje o novih dogodkih in povabila ######
 
 Mikrostoritev ki skrbi za obveščanje in povabila bo zadolžena še za odgovore na povabila, reagirala bo na nove evente, updejte ali uporabniške vnose. Push notifikacije v mobilni verziji*.
 Omogočala bo tudi časovno razporejanje obvestil in sledenje komu so bila obvestila poslana in njihov odziv na njih. 
 
-###### MojProfil
+###### MojProfil ######
 
 Mikrostoritev mojProfil bo zadolžena ze upravljanje s uporabniškim profilom znotraj sistema. Osredotočala se bo na spreminjanje obstoječega profila, nastavljanje preferenc, radiusa zaznavanja,...
 Komunicirala bo z isto bazo kot mikrostoritev za uporabniške račune.
 
-###### Admin panel
+###### Admin panel ######
 
 Admin panel administratorjem omogoča upravljanje in nadzor sistema, moderiranje objav in profilov. Namenjena je dostopu do ostalih mikrostoritev za potrebe moderiranja in spreminjanja. 
 
 
-###### Nastavitve
+###### Nastavitve ######
 
 Kakor admin panel upravlja sistem na ravni administratorja, ga nastavite na ravni uporabnika. Vsak si lahko konfigurira svojo uporabniško izkušnjo s nastavitvami jezika, obvestil, teme, privatnosti,... 
 
-#### Orodja
+#### Orodja ######
 Nekatera so navedena že v shemi
 - Meaven
 - IntelliJ
@@ -74,6 +76,6 @@ Nekatera so navedena že v shemi
 - Kafke ali RabbitMQ
 
 
-#### Arhitektura
-[arhitektura](arhitektura_spil.png)
+#### Arhitektura #####
+![arhitektura](arhitektura_spil.png)
 
