@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="sport-app-jpa" transaction-type="JTA">
+        <jta-data-source>jdbc/sportAppDS</jta-data-source>
+        
+        <class>si.luka2.prpo.sportapp.entitete.Uporabnik</class>
+
+        
+        <properties>
+                <property name="javax.persistence.schema-generation.database.action" value="none"/>
+<!--            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/sportapp"/>-->
+<!--            <property name="javax.persistence.jdbc.user" value="luka"/>-->
+<!--            <property name="javax.persistence.jdbc.password" value="luka"/>-->
+<!--            <property name="javax.persistence.query.timeout" value=""/>-->
+            
+        </properties>
+    </persistence-unit>
+</persistence>
