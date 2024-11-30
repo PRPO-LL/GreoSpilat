@@ -1,2 +1,13 @@
 
 .DS_Store
+
+
+.idea/
+
+target/
+
+*.log
+
+*.tmp
+
+
