@@ -1,4 +1,4 @@
-package si.luka2.prpo.sportapp.api.v1.viri;
+package si.luka2.prpo.sportapp.api.v1.resources;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -16,41 +16,43 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 
-import si.luka2.prpo.sportapp.entitete.Uporabnik;
-import si.luka2.prpo.sportapp.zrna.UporabnikiZrno;
+import si.luka2.prpo.sportapp.entities.User;
+import si.luka2.prpo.sportapp.beans.UserBean;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 //@Secure
 
 
 //gre za REST APi endpoint , za interakcijo z uporabniki skozi HTTP requeste
 @ApplicationScoped
-@Path("uporabniki") //vsi requesti na /uporabnik bojo hendlani s tem klasom
+@Path("users") //vsi requesti na /uporabnik bojo hendlani s tem klasom
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class UporabnikiVir {
+public class UserResource {
+    private Logger log = Logger.getLogger(UserResource.class.getName());
 
     @Context
     private UriInfo uriInfo;
 
     @Inject
-    private UporabnikiZrno uporabnikiZrno; //injectali referenco na uporabniško zrno
+    private UserBean userBean; //injectali referenco na uporabniško zrno
 
     @Operation(description = "Vrne seznam vseh uporabnikov", summary = "dodajanje")
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "Seznam uporabnikov",
-                    content = @Content(schema = @Schema(implementation = Uporabnik.class, type = SchemaType.ARRAY)),
+                    content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.ARRAY)),
                     headers = {@Header(name = "X-Total-Count", description = "Število vrnjenih uporabnikov")}
             )})
     @RolesAllowed("user")
     @GET
-    public Response pridobiUporabnike(){
+    public Response getUsers(){
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
 
-        List<Uporabnik> users = uporabnikiZrno.vrniUporabnike();
-        Long totalCount = uporabnikiZrno.pridobiUporabnikeCount(null);
+        List<User> users = userBean.getUsers();
+        Long totalCount = userBean.getUserCount(null);
 
         return Response.ok(users, MediaType.APPLICATION_JSON)
                 .header("X-Total-Count", totalCount)
@@ -61,33 +63,40 @@ public class UporabnikiVir {
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
-                    content = @Content(schema = @Schema(implementation = Uporabnik.class, type = SchemaType.OBJECT))
+                    content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.OBJECT))
             )})
     @RolesAllowed("user")
     @GET
     @Path("{id}")
-    public Response pridobiUporabnika(@PathParam("id") int uporabnikId) {
-        Uporabnik uporabnik = uporabnikiZrno.pridobiUporabnika(uporabnikId);
-        if(uporabnik == null) {
+    public Response getUser(@PathParam("id") int uporabnikId) {
+        User user = userBean.getUser(uporabnikId);
+        if(user == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Uporabnik ni bil najden")
                     .build();
         }
-        return Response.ok(uporabnik, MediaType.APPLICATION_JSON).build();
+        return Response.ok(user, MediaType.APPLICATION_JSON).build();
     }
     @Operation(description = "Doda uporabnika.", summary = "Dodajanje")
     @APIResponses({
             @APIResponse(responseCode = "201",
                     description = "Uporabnik uspešno dodan",
-                    content = @Content(schema = @Schema(implementation = Uporabnik.class, type = SchemaType.OBJECT))),
+                    content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.OBJECT))),
             @APIResponse(responseCode = "400",
                     description = "Napaka pri dodajanju uporabnika")
     })
     @RolesAllowed("user")
     @POST
-    @Path("/dodaj")
-    public Response dodajUporabnike(Uporabnik uporabnik) { //argument ki je passan tukaj, se doda cez klic APIja
-        Uporabnik novi = uporabnikiZrno.dodajUporabnika(uporabnik); // recimo v postmanu ko mas body POSTa
+    @Path("/add")
+    public Response addUser(User user) { //argument ki je passan tukaj, se doda cez klic APIja
+
+
+        if (user.getName() == null || user.getUsername() == null || user.getEmail() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Manjkajoči podatki v zahtevi. Preverite ime, uporabniško ime, email ali geslo.")
+                    .build();
+        }
+        User novi = userBean.addUser(user); // recimo v postmanu ko mas body POSTa
 
         if(novi == null){
             return Response.status(Response.Status.BAD_REQUEST)
@@ -104,7 +113,7 @@ public class UporabnikiVir {
     @APIResponses({
             @APIResponse(description = "Uporabnik uspešno posodobljen",
                     responseCode = "201",
-                    content = @Content(schema = @Schema(implementation = Uporabnik.class, type = SchemaType.OBJECT))),
+                    content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.OBJECT))),
 
             @APIResponse(responseCode = "400",
                     description = "Napaka pri posodabljanju uporabnika")
@@ -112,10 +121,10 @@ public class UporabnikiVir {
     })
     @RolesAllowed("user")
     @PATCH
-    @Path("/posodobi/{id}")
-    public Response posodobiUporabnika(@PathParam("id") int uporabnikId,Uporabnik uporabnik) {
+    @Path("/update/{id}")
+    public Response updateUser(@PathParam("id") int uporabnikId, User user) {
 
-        Uporabnik novi = uporabnikiZrno.posodobiUporabnika(uporabnikId, uporabnik);
+        User novi = userBean.updateUser(uporabnikId, user);
         if(novi == null){
             return Response.status(Response.Status.NOT_MODIFIED)
                     .entity("Spodletel poskus posodobitve uporabnika")
@@ -138,10 +147,10 @@ public class UporabnikiVir {
     })
     @RolesAllowed("user")
     @DELETE
-    @Path("/odstrani/{id}")
-    public Response odstraniUporabnika(@PathParam("id") int uporabnikId) {
+    @Path("/delete/{id}")
+    public Response deleteUser(@PathParam("id") int uporabnikId) {
 
-        boolean novi = uporabnikiZrno.odstraniUporanbika(uporabnikId);
+        boolean novi = userBean.deleteUser(uporabnikId);
         if(!novi){
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Spodletel poskus brisanja uporabnika")

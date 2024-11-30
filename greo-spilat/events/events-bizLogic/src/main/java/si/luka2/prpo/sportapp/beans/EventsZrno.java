@@ -1,17 +1,14 @@
 package si.luka2.prpo.sportapp.zrna;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
-import org.parboiled.support.DebuggingValueStack;
-import si.luka2.prpo.sportapp.entitete.Event;
+import si.luka2.prpo.sportapp.entities.Event;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.swing.border.EmptyBorder;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;

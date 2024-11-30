@@ -9,8 +9,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
-import si.luka2.prpo.sportapp.entitete.Event;
-import si.luka2.prpo.sportapp.zrna.EventsZrno;
+import si.luka2.prpo.sportapp.entities.Event;
+import si.luka2.prpo.sportapp.beans.EventsZrno;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;

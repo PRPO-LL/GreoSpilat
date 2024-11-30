@@ -1,12 +1,9 @@
-package si.luka2.prpo.sportapp.zrna;
+package si.luka2.prpo.sportapp.beans;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,23 +11,23 @@ import java.util.logging.Logger;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 //import com.kumuluz.ee.rest.utils.JPAUtils;
 
-import si.luka2.prpo.sportapp.entitete.Uporabnik;
+import si.luka2.prpo.sportapp.entities.User;
 
 @ApplicationScoped
-public class UporabnikiZrno {
+public class UserBean {
 
-    private Logger log = Logger.getLogger(UporabnikiZrno.class.getName());
+    private Logger log = Logger.getLogger(UserBean.class.getName());
 
     @PostConstruct
     private void init() {
-        log.info("Inicializacija zrna " + UporabnikiZrno.class.getSimpleName());
+        log.info("Inicializacija zrna " + UserBean.class.getSimpleName());
 
         // inicializacija virov
     }
 
     @PreDestroy
     private void destroy() {
-        log.info("Deinicializacija zrna " + UporabnikiZrno.class.getSimpleName());
+        log.info("Deinicializacija zrna " + UserBean.class.getSimpleName());
 
         // zapiranje virov
     }
@@ -39,16 +36,16 @@ public class UporabnikiZrno {
     private EntityManager em; //za interakcijo z databazo!!!
 
     //funkcionalnost za komunikacijo s databazo
-    public List<Uporabnik> vrniUporabnike(){
+    public List<User> getUsers() {
 
-        return em.createNamedQuery("Uporabnik.getAll", Uporabnik.class).getResultList();
+        return em.createNamedQuery("User.getAll", User.class).getResultList();
     }
 
 
-    public Long pridobiUporabnikeCount(QueryParameters query) {
+    public Long getUserCount(QueryParameters query) {
 
         StringBuilder strng = new StringBuilder();
-        strng.append("SELECT COUNT(u) FROM Uporabnik u WHERE 1=1");
+        strng.append("SELECT COUNT(u) FROM User u WHERE 1=1");
 
         /*
             implementiraj se query parametre!
@@ -61,46 +58,51 @@ public class UporabnikiZrno {
     }
 
 
-    public Uporabnik pridobiUporabnika(int uporabnikId) {
+    public User getUser(int uporabnikId) {
 
-        return em.createNamedQuery("Uporabnik.getById", Uporabnik.class)
-                .setParameter("id", uporabnikId)
+        return em.createNamedQuery("User.getById", User.class)
+                .setParameter("user_id", uporabnikId)
                 .getSingleResult();
     }
 
     @Transactional
-    public Uporabnik dodajUporabnika(Uporabnik uporabnik) {
-        if (uporabnik == null) {
+    public User addUser(User user) {
+        if (user == null) {
             throw new IllegalArgumentException("Uporabnik ne sme biti null");
         }
+//        if(user.getPassword() == null || user.getPassword().isEmpty()) {
+//            throw new IllegalArgumentException("Geslo ne sme biti null");
+//        }
 
         log.info("Uporabnik uspesno kreiran");
-        em.persist(uporabnik);
-        return uporabnik;
+//        String hashed = hashPassword()
+        em.persist(user);
+        return user;
     }
 
     @Transactional
-    public Uporabnik posodobiUporabnika(int uporabnikId, Uporabnik uporabnik) {
-        if (uporabnik == null) {
+    public User updateUser(int uporabnikId, User user) {
+        if (user == null) {
             throw new IllegalArgumentException("Uporabnik ne sme biti null");
         }
 
-        Uporabnik obstojec = em.find(Uporabnik.class, uporabnikId);
+        User obstojec = em.find(User.class, uporabnikId);
         if (obstojec == null) {
             throw new IllegalArgumentException("Uporabnik ki ga zelis spremeniti ne obstaja");
         }
 
-        obstojec.setIme(uporabnik.getIme());
-        obstojec.setPriimek(uporabnik.getPriimek());
-        obstojec.setUporabniskoIme(uporabnik.getUporabniskoIme());
+        obstojec.setName(user.getName());
+        obstojec.setEmail(user.getEmail());
+        obstojec.setUsername(user.getUsername());
+//        obstojec.setPasswordHash(user.getPasswordHash());
 
         return em.merge(obstojec);
     }
 
     @Transactional
-    public boolean odstraniUporanbika(int uporabnikId) {
+    public boolean deleteUser(int uporabnikId) {
 
-        Uporabnik obstojec = em.find(Uporabnik.class, uporabnikId);
+        User obstojec = em.find(User.class, uporabnikId);
         if(obstojec != null){
             em.remove(obstojec);
             return true;

@@ -1,8 +1,8 @@
 package si.luka2.prpo.sportapp.servleti;
 
 
-import si.luka2.prpo.sportapp.entitete.Uporabnik;
-import si.luka2.prpo.sportapp.zrna.UporabnikiZrno;
+import si.luka2.prpo.sportapp.entities.User;
+import si.luka2.prpo.sportapp.beans.UserBean;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class JPAServlet extends HttpServlet {
 
     @Inject
-    private UporabnikiZrno uporabnikiZrno; //uporabniško zrno se uporablja za interakcijo
+    private UserBean userBean; //uporabniško zrno se uporablja za interakcijo
     //z entitetetami Uporabnik
 
 
@@ -34,15 +34,15 @@ public class JPAServlet extends HttpServlet {
 
         PrintWriter writer = resp.getWriter();
 
-        Long countUporabnikov = uporabnikiZrno.pridobiUporabnikeCount(null);
+        Long countUporabnikov = userBean.getUserCount(null);
 
-        List<Uporabnik> users = uporabnikiZrno.vrniUporabnike();
+        List<User> users = userBean.getUsers();
 
 
         // Display the user count and list each user's details
         writer.append("<br/>Uporabnikov je: " + countUporabnikov + "<br/><br/>");
         writer.append("<br/>Uporabniki:<br/><br/>");
-        for (Uporabnik user : users) {
+        for (User user : users) {
             writer.append(user.toString()).append("<br/><br/>");
         }
 
