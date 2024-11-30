@@ -11,9 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api</module>
-        <module>storitve</module>
-        <module>entitete</module>
+        <module>users</module>
     </modules>
 
     <name>Greo Spilat app</name>
@@ -116,17 +114,17 @@
             </dependency>
             <dependency>
                 <groupId>si.luka2.prpo.sportapp</groupId>
-                <artifactId>api</artifactId>
+                <artifactId>users-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>si.luka2.prpo.sportapp</groupId>
-                <artifactId>storitve</artifactId>
+                <artifactId>users-bizLogic</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>si.luka2.prpo.sportapp</groupId>
-                <artifactId>entitete</artifactId>
+                <artifactId>users-persistance</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
