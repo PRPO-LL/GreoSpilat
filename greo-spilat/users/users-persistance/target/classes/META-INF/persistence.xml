@@ -3,10 +3,8 @@
     <persistence-unit name="greo-spilat-jpa" transaction-type="JTA">
         <jta-data-source>jdbc/sportappDS</jta-data-source>
 
-        <!--        <class>si.luka2.prpo.sportapp.entitete.NakupovalniSeznam</class>-->
-        <!--        <class>si.luka2.prpo.sportapp.entitete.Artikel</class>-->
         <class>si.luka2.prpo.sportapp.entitete.Uporabnik</class>
-        <!--        <class>si.luka2.prpo.sportapp.entitete.Oznaka</class>-->
+
 
         <class>si.luka2.prpo.sportapp.pretvorniki.InstantPretvornik</class>
 

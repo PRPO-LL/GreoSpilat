@@ -12,6 +12,7 @@
 
     <modules>
         <module>users</module>
+        <module>events</module>
     </modules>
 
     <name>Greo Spilat app</name>
@@ -125,6 +126,21 @@
             <dependency>
                 <groupId>si.luka2.prpo.sportapp</groupId>
                 <artifactId>users-persistance</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>events-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>events-bizLogic</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>events-persistance</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="events-jpa" transaction-type="JTA">
+        <jta-data-source>jdbc/eventsDS</jta-data-source>
+
+        <class>si.luka2.prpo.sportapp.entitete.Event</class>
+
+
+<!--        <class>si.luka2.prpo.sportapp.pretvorniki.InstantPretvornik</class>-->
+
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="none"/>
+            <!--                ce hoces to usat mors spremenit value v drop-and-create-->
+<!--            <property name="javax.persistence.schema-generation.create-source" value="metadata"/>-->
+<!--            <property name="javax.persistence.sql-load-script-source" value="sql-scripts/init-db-events.sql"/>-->
+<!--            <property name="javax.persistence.schema-generation.drop-source" value="metadata"/>-->
+        </properties>
+
+    </persistence-unit>
+</persistence>

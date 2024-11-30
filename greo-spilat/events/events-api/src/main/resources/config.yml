@@ -1,18 +1,17 @@
 kumuluzee:
-  name: users
+  name: events
   version: 1.0.0
   env:
     name: dev
   datasources:
-    - jndi-name: jdbc/sportappDS
-      connection-url: jdbc:postgresql://localhost:5432/sportapp
+    - jndi-name: jdbc/eventsDS
+      connection-url: jdbc:postgresql://localhost:5433/events
       username: luka
       password: luka
       max-pool-size: 20
-
   server:
     http:
-      port: 8084
+      port: 8083
   health:
     checks:
       data-source-health-check:
@@ -20,9 +19,9 @@ kumuluzee:
         jndi-name: jdbc/sport-appDS
   rest-client:
     registrations:
-      - class: users-api
+      - class: events-api
         url: http://localhost:8081/v1
         read-timeout: 5000
 integrations:
-  users:
+  events:
     base-url: http://localhost:8081/v1
