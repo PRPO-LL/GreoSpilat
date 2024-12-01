@@ -18,6 +18,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", nullable = false, updatable = false)
     private Integer user_id;
 
     @Column(name = "name", nullable = false, length = 50)
@@ -61,6 +62,9 @@ public class User {
 
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password = password;}
+
+    public Integer getUser_id() {return user_id;}
+    public void setUser_id(Integer user_id) {this.user_id = user_id;}
 
 //    public User(){}
 //    public JsonbProperty getPreferences() {return this.preferences;}
