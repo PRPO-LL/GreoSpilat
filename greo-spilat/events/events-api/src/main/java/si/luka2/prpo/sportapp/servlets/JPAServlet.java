@@ -1,7 +1,7 @@
 package si.luka2.prpo.sportapp.servlets;
 
-import si.luka2.prpo.sportapp.entitete.Event;
-import si.luka2.prpo.sportapp.zrna.EventsZrno;
+import si.luka2.prpo.sportapp.entities.Event;
+import si.luka2.prpo.sportapp.beans.EventsBean;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 @WebServlet("/servlet")
 public class JPAServlet extends HttpServlet {
     @Inject
-    private EventsZrno eventsZrno;
+    private EventsBean eventsBean;
 
     private static final Logger log = Logger.getLogger(JPAServlet.class.getName());
 
@@ -28,14 +28,14 @@ public class JPAServlet extends HttpServlet {
 
         PrintWriter writer = resp.getWriter();
 
-        Long countEventov = eventsZrno.getEventsCount(null);
+        Long countEventov = eventsBean.getEventsCount(null);
 
-        List<Event> events = eventsZrno.getEvents();
+        List<Event> events = eventsBean.getEvents();
 
 
         // Display the user count and list each user's details
-        writer.append("<br/>Uporabnikov je: " + countEventov + "<br/><br/>");
-        writer.append("<br/>Uporabniki:<br/><br/>");
+        writer.append("<br/>Eventov je: " + countEventov + "<br/><br/>");
+        writer.append("<br/>Eventi:<br/><br/>");
         for (Event event : events) {
             writer.append(event.toString()).append("<br/><br/>");
         }

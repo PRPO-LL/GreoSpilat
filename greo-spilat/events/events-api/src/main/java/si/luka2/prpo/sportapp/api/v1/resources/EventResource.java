@@ -1,4 +1,4 @@
-package si.luka2.prpo.sportapp.api.v1.viri;
+package si.luka2.prpo.sportapp.api.v1.resources;
 
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
@@ -10,7 +10,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import si.luka2.prpo.sportapp.entities.Event;
-import si.luka2.prpo.sportapp.beans.EventsZrno;
+import si.luka2.prpo.sportapp.beans.EventsBean;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
@@ -26,13 +26,13 @@ import java.util.List;
 @Path("events")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class EventsVir {
+public class EventResource {
 
     @Context
     private UriInfo uriInfo;
 
     @Inject
-    private EventsZrno eventsZrno;
+    private EventsBean eventsBean;
 
     @Operation(description = "Vrne seznam vseh eventov")
     @APIResponses({
@@ -46,8 +46,8 @@ public class EventsVir {
     public Response getEvents(){
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
 
-        List<Event> events = eventsZrno.getEvents();
-        Long totalCount = eventsZrno.getEventsCount(null);
+        List<Event> events = eventsBean.getEvents();
+        Long totalCount = eventsBean.getEventsCount(null);
 
         return Response.ok(events, MediaType.APPLICATION_JSON)
                 .header("X-Total-Count", totalCount)
@@ -64,7 +64,7 @@ public class EventsVir {
     @GET
     @Path("{id}")
     public Response getEvent(@PathParam("id") int eventId) {
-        Event event = eventsZrno.getEvent(eventId);
+        Event event = eventsBean.getEvent(eventId);
         if(event == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Uporabnik ni bil najden")
@@ -83,9 +83,9 @@ public class EventsVir {
     })
     @RolesAllowed("user")
     @POST
-    @Path("/dodaj")
+    @Path("/add")
     public Response addEvent(Event event) { //argument ki je passan tukaj, se doda cez klic APIja
-        Event novi = eventsZrno.addEvent(event); // recimo v postmanu ko mas body POSTa
+        Event novi = eventsBean.addEvent(event); // recimo v postmanu ko mas body POSTa
 
         if(novi == null){
             return Response.status(Response.Status.BAD_REQUEST)
@@ -110,10 +110,10 @@ public class EventsVir {
     })
     @RolesAllowed("user")
     @PATCH
-    @Path("/posodobi/{id}")
+    @Path("/update/{id}")
     public Response updateEvent(@PathParam("id") int eventId,Event event) {
 
-        Event novi = eventsZrno.updateEvent(eventId, event);
+        Event novi = eventsBean.updateEvent(eventId, event);
         if(novi == null){
             return Response.status(Response.Status.NOT_MODIFIED)
                     .entity("Spodletel poskus posodobitve eventa")
@@ -135,10 +135,10 @@ public class EventsVir {
     })
     @RolesAllowed("user")
     @DELETE
-    @Path("/odstrani/{id}")
+    @Path("/delete/{id}")
     public Response deleteEvent(@PathParam("id") int eventId) {
 
-        boolean novi = eventsZrno.deleteEvent(eventId);
+        boolean novi = eventsBean.deleteEvent(eventId);
         if(!novi){
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Spodletel poskus brisanja eventa")

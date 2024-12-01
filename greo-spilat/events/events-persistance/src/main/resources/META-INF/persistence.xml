@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
     <persistence-unit name="events-jpa" transaction-type="JTA">
-        <jta-data-source>jdbc/eventsDS</jta-data-source>
+        <jta-data-source>jdbc/sportappDS</jta-data-source>
 
-        <class>si.luka2.prpo.sportapp.entitete.Event</class>
+        <class>si.luka2.prpo.sportapp.entities.Event</class>
 
 
 <!--        <class>si.luka2.prpo.sportapp.pretvorniki.InstantPretvornik</class>-->

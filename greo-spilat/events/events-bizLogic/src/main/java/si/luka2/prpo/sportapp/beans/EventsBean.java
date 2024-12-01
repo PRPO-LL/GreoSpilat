@@ -1,4 +1,4 @@
-package si.luka2.prpo.sportapp.zrna;
+package si.luka2.prpo.sportapp.beans;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import si.luka2.prpo.sportapp.entities.Event;
@@ -14,22 +14,22 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class EventsZrno {
+public class EventsBean {
 
 
     @PersistenceContext(unitName = "events-jpa")
     private EntityManager em;
 
-    private Logger log = Logger.getLogger(EventsZrno.class.getName());
+    private Logger log = Logger.getLogger(EventsBean.class.getName());
 
     @PostConstruct
     private void init() {
-        log.info("Inicializacija zrna " + EventsZrno.class.getSimpleName());
+        log.info("Inicializacija zrna " + EventsBean.class.getSimpleName());
     }
 
     @PreDestroy
     private void destroy() {
-        log.info("Deinizializacija zrna " + EventsZrno.class.getSimpleName());
+        log.info("Deinizializacija zrna " + EventsBean.class.getSimpleName());
     }
 
     public Long getEventsCount(QueryParameters query) {
@@ -43,9 +43,10 @@ public class EventsZrno {
     public List<Event> getEvents() {
         return em.createNamedQuery("Event.getAll", Event.class).getResultList();
     }
+
     public Event getEvent(int eventId) {
         return em.createNamedQuery("Event.getByEventId", Event.class )
-                .setParameter("id", eventId)
+                .setParameter("event_id", eventId)
                 .getSingleResult();
     }
 
