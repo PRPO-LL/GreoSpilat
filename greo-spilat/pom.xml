@@ -13,6 +13,7 @@
     <modules>
         <module>users</module>
         <module>events</module>
+        <module>notifications</module>
     </modules>
 
     <name>Greo Spilat app</name>
