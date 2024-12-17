@@ -16,6 +16,7 @@
         <module>notifications-api</module>
         <module>notifications-bizLogic</module>
         <module>notifications-persistance</module>
+        <module>notifications-worker</module>
     </modules>
 
     <name>Notifications Module</name>

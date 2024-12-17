@@ -8,6 +8,11 @@
     </parent>
     <artifactId>notifications-bizLogic</artifactId>
     <dependencies>
-        <!-- Add dependencies -->
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>notifications-persistance</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
+
 </project>
