@@ -40,11 +40,12 @@
             <artifactId>kumuluzee-cors</artifactId>
         </dependency>
 
-        <!-- Health checks -->
+        <!-- Health checks
         <dependency>
             <groupId>com.kumuluz.ee.health</groupId>
             <artifactId>kumuluzee-health</artifactId>
         </dependency>
+        -->
 
         <!-- Config -->
         <dependency>

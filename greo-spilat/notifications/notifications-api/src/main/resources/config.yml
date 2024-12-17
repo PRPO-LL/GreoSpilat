@@ -1,0 +1,8 @@
+kumuluzee:
+  name: notifications-api
+  version: 1.0.0
+  server:
+    http:
+      port: 8401
+  env:
+    name: dev
