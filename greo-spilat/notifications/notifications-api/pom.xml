@@ -61,6 +61,14 @@
         </dependency>
 
         <!-- Dependencies from other modules -->
+
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>notifications-bizLogic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>si.luka2.prpo.sportapp</groupId>
             <artifactId>notifications-persistance</artifactId>
