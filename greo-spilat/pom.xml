@@ -13,6 +13,7 @@
     <modules>
         <module>users</module>
         <module>events</module>
+        <module>authentication</module>
     </modules>
 
     <name>Greo Spilat app</name>
@@ -57,6 +58,22 @@
                 <artifactId>yasson</artifactId>
                 <version>1.0.2</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>5.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.password4j</groupId>
+                <artifactId>password4j</artifactId>
+                <version>1.6.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>4.4.0</version> <!-- Use the latest version -->
+            </dependency>
+
             <dependency>
                 <groupId>com.kumuluz.ee.config</groupId>
                 <artifactId>kumuluzee-config-mp</artifactId>
@@ -141,6 +158,26 @@
             <dependency>
                 <groupId>si.luka2.prpo.sportapp</groupId>
                 <artifactId>events-persistance</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>auth-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>auth-bizLogic</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>auth-persistance</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>si.luka2.prpo.sportapp</groupId>
+                <artifactId>auth-shared</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

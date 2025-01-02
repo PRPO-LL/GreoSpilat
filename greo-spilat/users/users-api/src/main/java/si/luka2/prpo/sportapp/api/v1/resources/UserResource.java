@@ -91,9 +91,9 @@ public class UserResource {
     public Response addUser(User user) { //argument ki je passan tukaj, se doda cez klic APIja
 
 
-        if (user.getName() == null || user.getUsername() == null || user.getEmail() == null) {
+        if (user.getUsername() == null || user.getUser_id() == null) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Manjkajoči podatki v zahtevi. Preverite ime, uporabniško ime, email ali geslo.")
+                    .entity("Manjkajoči podatki v zahtevi. Preverite uporabniško ime in geslo.")
                     .build();
         }
         User novi = userBean.addUser(user); // recimo v postmanu ko mas body POSTa

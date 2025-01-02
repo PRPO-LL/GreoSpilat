@@ -1,0 +1,28 @@
+kumuluzee:
+  name: authentication
+  version: 1.0.0
+  env:
+    name: dev
+  datasources:
+    - jndi-name: jdbc/sportappDS
+      connection-url: jdbc:postgresql://localhost:5432/events_users
+      username: luka
+      password: luka
+      max-pool-size: 20
+
+  server:
+    http:
+      port: 8085
+  #  health:
+  #    checks:
+  #      data-source-health-check:
+  #        type: liveness
+  #        jndi-name: jdbc/sport-appDS
+  rest-client:
+    registrations:
+      - class: auth-api
+        url: http://localhost:8081/v1
+        read-timeout: 5000
+integrations:
+  users:
+    base-url: http://localhost:8081/v1
