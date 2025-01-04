@@ -1,11 +1,20 @@
+debug: "AUTH Config file loaded successfully"
+
 kumuluzee:
   name: authentication
   version: 1.0.0
   env:
     name: dev
+#  datasources:
+#    - jndi-name: jdbc/sportappDS
+#      connection-url: jdbc:postgresql://localhost:5432/events_users
+#      username: luka
+#      password: luka
+#      max-pool-size: 20
   datasources:
     - jndi-name: jdbc/sportappDS
-      connection-url: jdbc:postgresql://localhost:5432/events_users
+#      connection-url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      connection-url: jdbc:postgresql://postgres:5432/events_users
       username: luka
       password: luka
       max-pool-size: 20
@@ -21,8 +30,10 @@ kumuluzee:
   rest-client:
     registrations:
       - class: auth-api
-        url: http://localhost:8081/v1
+        url: http://auth-service:8085/v1
         read-timeout: 5000
 integrations:
   users:
-    base-url: http://localhost:8081/v1
+    base-url: http://user-service:8084/v1
+  events:
+    base-url: http://event-service:8083/v1

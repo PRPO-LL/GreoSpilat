@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
     private Logger log = Logger.getLogger(UserResource.class.getName());
-    private final static int adminId = 8;
+    private final static int adminId = 1;
     @Context
     private UriInfo uriInfo;
 

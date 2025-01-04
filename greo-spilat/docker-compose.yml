@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: ${DB_NAME}
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+#    networks:
+#      - app-network
+
+
+  auth-service:
+    build:
+      context: ./authentication
+      dockerfile: Dockerfile
+    image: greo-spilat/auth-service:1.0
+    container_name: auth-service
+    restart: always
+    ports:
+      - "${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - AUTH_API_URL=${AUTH_API_URL}
+      - USERS_SERVICE_URL=${USER_API_URL}
+      - EVENTS_SERVICE_URL=${EVENT_API_URL}
+#    networks:
+#      - app-network
+    depends_on:
+      - postgres
+
+  user-service:
+    build:
+      context: ./users
+      dockerfile: Dockerfile
+    image: greo-spilat/user-service:1.0
+    container_name: user-service
+    restart: always
+    ports:
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - AUTH_API_URL=${AUTH_API_URL}
+      - USERS_SERVICE_URL=${USER_API_URL}
+      - EVENTS_SERVICE_URL=${EVENT_API_URL}
+#    networks:
+#      - app-network
+    depends_on:
+      - postgres
+
+
+  event-service:
+    build:
+      context: ./events
+      dockerfile: Dockerfile
+    image: greo-spilat/event-service:1.0
+    container_name: event-service
+    restart: always
+    ports:
+      - "${EVENT_SERVICE_PORT}:${EVENT_SERVICE_PORT}"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - AUTH_API_URL=${AUTH_API_URL}
+      - USERS_SERVICE_URL=${USER_API_URL}
+      - EVENTS_SERVICE_URL=${EVENT_API_URL}
+#    networks:
+#      - app-network
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres-data: {}
+
+#ker mece localhost:5432 za connection error
+#networks:
+#  app-network:
+#    driver: bridge

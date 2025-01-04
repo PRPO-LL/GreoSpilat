@@ -25,7 +25,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EventResource {
-    private final static int adminId = 8;
+    private final static int adminId = 1;
     @Context
     private UriInfo uriInfo;
 

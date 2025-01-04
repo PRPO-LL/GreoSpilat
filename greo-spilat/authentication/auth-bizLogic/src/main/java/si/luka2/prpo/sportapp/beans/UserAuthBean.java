@@ -36,13 +36,11 @@ import java.util.logging.Logger;
 public class UserAuthBean {
     private Logger log = Logger.getLogger(UserAuthBean.class.getName());
     private CloseableHttpClient httpClient;
-    private String basePath;
     private ObjectMapper objectMapper;
     @PostConstruct
     private void init() {
         log.info("Inicializacija zrna " + UserAuthBean.class.getSimpleName());
         httpClient = HttpClientBuilder.create().build();
-        basePath = "http://localhost:8084/v1/";
         // inicializacija virov
         objectMapper = new ObjectMapper();
     }

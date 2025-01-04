@@ -102,7 +102,7 @@ public class UserAuthResource {
     @Path("/register")
     public Response addUser(RegisterUserDTO user) { //argument ki je passan tukaj, se doda cez klic APIja
         httpClient = HttpClientBuilder.create().build();
-        basePath = "http://localhost:8084/v1/";
+        basePath = "http://user-service:8084/v1/";
         // inicializacija virov
         objectMapper = new ObjectMapper();
 
@@ -189,7 +189,7 @@ public class UserAuthResource {
     @Path("/delete")
     public Response deleteUser(RegisterUserDTO user) {
         httpClient = HttpClientBuilder.create().build();
-        basePath = "http://localhost:8084/v1/";
+        basePath = "http://user-service:8084/v1/";
         // inicializacija virov
         objectMapper = new ObjectMapper();
         UserAuth userAuth = userAuthBean.getUser(user.getUsername());
