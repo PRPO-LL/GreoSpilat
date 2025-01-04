@@ -16,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 
+import si.luka2.prpo.sportapp.beans.JwtService;
 import si.luka2.prpo.sportapp.entities.User;
 import si.luka2.prpo.sportapp.beans.UserBean;
 
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
     private Logger log = Logger.getLogger(UserResource.class.getName());
-
+    private final static int adminId = 8;
     @Context
     private UriInfo uriInfo;
 
@@ -122,9 +123,16 @@ public class UserResource {
     @RolesAllowed("user")
     @PATCH
     @Path("/update/{id}")
-    public Response updateUser(@PathParam("id") int uporabnikId, User user) {
-
-        User novi = userBean.updateUser(uporabnikId, user);
+    public Response updateUser(@Context HttpHeaders headers,@PathParam("id") int uporabnikId, User user) {
+        String header = headers.getHeaderString("Authorization");
+        User novi = null;
+        if (header != null) {
+            int id = JwtService.validateToken(header);
+            if(uporabnikId == id || id == adminId){
+                novi = userBean.updateUser(uporabnikId, user);
+            }
+        }
+        //User novi = userBean.updateUser(uporabnikId, user);
         if(novi == null){
             return Response.status(Response.Status.NOT_MODIFIED)
                     .entity("Spodletel poskus posodobitve uporabnika")
@@ -148,9 +156,15 @@ public class UserResource {
     @RolesAllowed("user")
     @DELETE
     @Path("/delete/{id}")
-    public Response deleteUser(@PathParam("id") int uporabnikId) {
-
-        boolean novi = userBean.deleteUser(uporabnikId);
+    public Response deleteUser(@Context HttpHeaders headers,@PathParam("id") int uporabnikId) {
+        String header = headers.getHeaderString("Authorization");
+        boolean novi = false;
+        if (header != null) {
+            int id = JwtService.validateToken(header);
+            if(uporabnikId == id || id == adminId){
+                novi = userBean.deleteUser(uporabnikId);
+            }
+        }
         if(!novi){
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Spodletel poskus brisanja uporabnika")

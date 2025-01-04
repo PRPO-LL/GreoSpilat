@@ -11,16 +11,6 @@ import java.time.LocalDateTime;
 })
 public class Event {
 
-    public enum Sport {
-        FOOTBALL,
-        BASKETBALL,
-        TENNIS,
-        SWIMMING,
-        RUNNING,
-        CYCLING,
-        HIKING,
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false, updatable = false)
@@ -35,37 +25,36 @@ public class Event {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "creator_id")
+    @Column(name = "creator_id", nullable = false)
     private Integer creator_id;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
-    @Column(name = "max_participants")
-    private Integer maxParticipants;
+    @Column(name = "sport")
+    private String sport;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sport", nullable = false)
-    private Sport sport;
+    @Column(name = "max_participants")
+    private Integer max_participants;
 
 
     public Integer getId(){return this.event_id;}
     public String getTitle(){return this.title;}
     public String getDescription(){return this.description;}
     public String getLocation(){return this.location;}
-    public Sport getSport(){return this.sport;}
+    public String getSport(){return this.sport;}
     public LocalDateTime getDate(){return this.startTime;}
     public Integer getCreatorId(){return this.creator_id;}
-    public Integer getMaxParticipants(){return this.maxParticipants;}
+    public Integer getMaxParticipants(){return this.max_participants;}
 
     public void setId(Integer event_id){this.event_id = event_id;}
     public void setTitle(String title){this.title = title;}
     public void setDescription(String description){this.description = description;}
     public void setLocation(String location){this.location = location;}
-    public void setSport(Sport sport){this.sport = sport;}
+    public void setSport(String sport){this.sport = sport;}
     public void setDate(LocalDateTime startTime){this.startTime = startTime;}
     public void setCreatorId(Integer creator_id){this.creator_id = creator_id;}
-    public void setMaxParticipants(Integer maxParticipants){this.maxParticipants = maxParticipants;}
+    public void setMaxParticipants(Integer max_participants){this.max_participants = max_participants;}
 
     @Override
     public String toString() {

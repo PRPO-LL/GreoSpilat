@@ -11,15 +11,13 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import si.luka2.prpo.sportapp.entities.Event;
 import si.luka2.prpo.sportapp.beans.EventsBean;
+import si.luka2.prpo.sportapp.beans.JwtService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 @ApplicationScoped
@@ -27,7 +25,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EventResource {
-
+    private final static int adminId = 8;
     @Context
     private UriInfo uriInfo;
 
@@ -84,9 +82,14 @@ public class EventResource {
     @RolesAllowed("user")
     @POST
     @Path("/add")
-    public Response addEvent(Event event) { //argument ki je passan tukaj, se doda cez klic APIja
-        Event novi = eventsBean.addEvent(event); // recimo v postmanu ko mas body POSTa
-
+    public Response addEvent(@Context HttpHeaders headers, Event event) { //argument ki je passan tukaj, se doda cez klic APIja
+        String header = headers.getHeaderString("Authorization");
+        Event novi = null;
+        if (header != null) {
+            int id = JwtService.validateToken(header);
+            event.setCreatorId(id);
+            novi = eventsBean.addEvent(event); // recimo v postmanu ko mas body POSTa
+        }
         if(novi == null){
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Spodletel poskus kreacije eventa")
@@ -111,9 +114,15 @@ public class EventResource {
     @RolesAllowed("user")
     @PATCH
     @Path("/update/{id}")
-    public Response updateEvent(@PathParam("id") int eventId,Event event) {
-
-        Event novi = eventsBean.updateEvent(eventId, event);
+    public Response updateEvent(@Context HttpHeaders headers,@PathParam("id") int eventId,Event event) {
+        String header = headers.getHeaderString("Authorization");
+        Event novi = null;
+        Event stari = eventsBean.getEvent(eventId);
+        if (header != null) {
+            int id = JwtService.validateToken(header);
+            if(id == stari.getCreatorId() || id == adminId)
+                novi = eventsBean.updateEvent(eventId,event); // recimo v postmanu ko mas body POSTa
+        }
         if(novi == null){
             return Response.status(Response.Status.NOT_MODIFIED)
                     .entity("Spodletel poskus posodobitve eventa")
@@ -136,10 +145,16 @@ public class EventResource {
     @RolesAllowed("user")
     @DELETE
     @Path("/delete/{id}")
-    public Response deleteEvent(@PathParam("id") int eventId) {
-
-        boolean novi = eventsBean.deleteEvent(eventId);
-        if(!novi){
+    public Response deleteEvent(@Context HttpHeaders headers,@PathParam("id") int eventId) {
+        String header = headers.getHeaderString("Authorization");
+        Event novi = eventsBean.getEvent(eventId);
+        boolean zbrisan = false;
+        if (header != null) {
+            int id = JwtService.validateToken(header);
+            if(id == novi.getCreatorId() || id == adminId)
+                zbrisan = eventsBean.deleteEvent(eventId);
+        }
+        if(!zbrisan){
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Spodletel poskus brisanja eventa")
                     .build();

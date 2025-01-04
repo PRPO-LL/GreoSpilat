@@ -44,6 +44,7 @@ public class EventsBean {
         return em.createNamedQuery("Event.getAll", Event.class).getResultList();
     }
 
+
     public Event getEvent(int eventId) {
         return em.createNamedQuery("Event.getByEventId", Event.class )
                 .setParameter("event_id", eventId)
@@ -52,6 +53,7 @@ public class EventsBean {
 
     @Transactional
     public Event addEvent(Event event){
+
         if(event == null){
             throw new IllegalArgumentException("Event is null");
         }
@@ -74,7 +76,7 @@ public class EventsBean {
         }
         currentEvent.setTitle(event.getTitle());
         currentEvent.setDescription(event.getDescription());
-        currentEvent.setDate(event.getDate());
+        //currentEvent.setDate(event.getDate());
         currentEvent.setLocation(event.getLocation());
         currentEvent.setSport(event.getSport());
 

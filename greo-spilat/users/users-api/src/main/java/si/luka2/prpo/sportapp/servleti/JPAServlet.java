@@ -1,10 +1,8 @@
 package si.luka2.prpo.sportapp.servleti;
 
 
-import si.luka2.prpo.sportapp.beans.UserEventsBean;
 import si.luka2.prpo.sportapp.entities.User;
 import si.luka2.prpo.sportapp.beans.UserBean;
-import si.luka2.prpo.sportapp.entities.UserEvents;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -26,8 +24,6 @@ public class JPAServlet extends HttpServlet {
 
 
     private static final Logger log = Logger.getLogger(JPAServlet.class.getName());
-    @Inject
-    private UserEventsBean userEventsBean;
 
 
     @Override
@@ -50,15 +46,7 @@ public class JPAServlet extends HttpServlet {
             writer.append(user.toString()).append("<br/><br/>");
         }
 
-        writer.append("<br/><br/><br/>");
-        writer.append("<br/>Eventi na uporabnika; <br/><br/>");
-        for(User user : users) {
-            List<UserEvents> events = userEventsBean.getUserEvents(user.getUser_id());
-            writer.append("uporabnik :" + user.getUsername()).append("<br/><br/>");
-            for(UserEvents event : events) {
-                writer.append(event.toString()).append("<br/><br/>");
-            }
-        }
+
 
     }
 }

@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Logger;
 
 @RequestScoped
@@ -56,6 +57,25 @@ public class UserAuthResource {
             )})
     @RolesAllowed("user")
     @GET
+    @Path("all")
+    public Response getUsers() {
+        List<UserAuth> list = userAuthBean.getUsers();
+        if(list == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Uporabniki niso bili najdeni")
+                    .build();
+        }
+        return Response.ok(list, MediaType.APPLICATION_JSON).build();
+    }
+
+    @Operation(description = "Vrne enega uporabnik.", summary = "uporabnik")
+    @APIResponses({
+            @APIResponse(responseCode = "200",
+                    description = "En uporabnik",
+                    content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
+            )})
+    @RolesAllowed("user")
+    @GET
     @Path("{username}")
     public Response getUser(@PathParam("username") String username) {
         UserAuth user = userAuthBean.getUser(username);
@@ -66,6 +86,7 @@ public class UserAuthResource {
         }
         return Response.ok(user, MediaType.APPLICATION_JSON).build();
     }
+
 
 
     @Operation(description = "Registrira uporabnika.", summary = "Registriranje")
@@ -167,6 +188,10 @@ public class UserAuthResource {
     @DELETE
     @Path("/delete")
     public Response deleteUser(RegisterUserDTO user) {
+        httpClient = HttpClientBuilder.create().build();
+        basePath = "http://localhost:8084/v1/";
+        // inicializacija virov
+        objectMapper = new ObjectMapper();
         UserAuth userAuth = userAuthBean.getUser(user.getUsername());
         try{
             HttpDelete httpDelete = new HttpDelete(basePath + "users/delete/" + userAuth.getId());

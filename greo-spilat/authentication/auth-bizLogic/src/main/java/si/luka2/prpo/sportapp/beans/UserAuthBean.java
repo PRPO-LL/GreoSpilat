@@ -29,6 +29,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.util.List;
 import java.util.logging.Logger;
 
 @RequestScoped
@@ -68,6 +69,10 @@ public class UserAuthBean {
         return em.createNamedQuery("User.getByUsername", UserAuth.class)
                 .setParameter("username", username)
                 .getSingleResult();
+    }
+
+    public List<UserAuth> getUsers() {
+        return em.createNamedQuery("User.getAll", UserAuth.class).getResultList();
     }
 
     //ustvari userja, mu hasha password, ustvari userja v users tabeli!
