@@ -6,3 +6,13 @@ kumuluzee:
       port: 8401
   env:
     name: dev
+  datasources:
+    - jndi-name: jdbc/sportappDS
+      connection-url: jdbc:postgresql://localhost:5432/sportapp
+      username: luka
+      password: luka
+      max-pool-size: 20
+  logs:
+    levels:
+      ROOT: INFO
+      si.luka2.prpo.sportapp.beans.NotificationBean: DEBUG

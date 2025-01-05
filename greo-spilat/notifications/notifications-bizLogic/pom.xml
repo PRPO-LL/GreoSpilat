@@ -14,14 +14,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- CDI API -->
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>3.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Jakarta Annotations -->
         <dependency>
             <groupId>jakarta.annotation</groupId>
@@ -30,10 +22,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>2.0.2</version>
-            <scope>compile</scope>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-cdi-weld</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-jta-narayana</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kumuluz.ee.rest</groupId>
+            <artifactId>kumuluzee-rest-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.rest-client</groupId>
+            <artifactId>kumuluzee-rest-client</artifactId>
         </dependency>
     </dependencies>
 
