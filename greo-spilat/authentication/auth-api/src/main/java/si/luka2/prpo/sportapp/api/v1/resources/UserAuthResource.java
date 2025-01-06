@@ -111,7 +111,7 @@ public class UserAuthResource {
                     .entity("Manjkajoči podatki v zahtevi. Preverite uporabniško ime in geslo")
                     .build();
         }
-    UserAuth novi = userAuthBean.createUser(user); // recimo v postmanu ko mas body POSTa
+        UserAuth novi = userAuthBean.createUser(user); // recimo v postmanu ko mas body POSTa
 //
 //        if(novi == null){
 //            return Response.status(Response.Status.BAD_REQUEST)
