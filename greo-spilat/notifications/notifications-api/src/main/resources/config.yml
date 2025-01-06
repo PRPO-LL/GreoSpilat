@@ -6,9 +6,15 @@ kumuluzee:
       port: 8401
   env:
     name: dev
+#  datasources:
+#    - jndi-name: jdbc/sportappDS
+#      connection-url: jdbc:postgresql://localhost:5432/sportapp
+#      username: luka
+#      password: luka
+#      max-pool-size: 20
   datasources:
     - jndi-name: jdbc/sportappDS
-      connection-url: jdbc:postgresql://localhost:5432/sportapp
+      connection-url: jdbc:postgresql://postgres:5432/sportapp
       username: luka
       password: luka
       max-pool-size: 20
