@@ -1,41 +1,7 @@
 
 <template>
   <div id="home">
-<!--    <header>-->
-<!--      <h1>Home</h1>-->
-<!--      <button @click="logout" class="logout-btn">Logout</button>-->
-<!--    </header>-->
     <Header @logout="logout()"/>
-
-    <!-- Form to Add a New Event -->
-<!--    <div class="add-event-form">-->
-<!--      <h2>Add New Event</h2>-->
-<!--      <form @submit.prevent="addEvent">-->
-<!--        <label for="title">Title</label>-->
-<!--        <input v-model="newEvent.title" type="text" id="title" required />-->
-
-<!--        <label for="sport">Sport</label>-->
-<!--        <input v-model="newEvent.sport" type="text" id="sport" required />-->
-
-<!--        <label for="location">Location</label>-->
-<!--        <input v-model="newEvent.location" type="text" id="location" required />-->
-
-<!--        <label for="max_participants">Max Participants</label>-->
-<!--        <input-->
-<!--            v-model="newEvent.max_participants"-->
-<!--            type="number"-->
-<!--            id="max_participants"-->
-<!--            required-->
-<!--        />-->
-
-<!--        <label for="description">Description</label>-->
-<!--        <textarea v-model="newEvent.description" id="description" rows="3"></textarea>-->
-
-<!--        <button type="submit">Add Event</button>-->
-<!--      </form>-->
-<!--    </div>-->
-
-    <!-- Display List of Events -->
     <main>
       <div class="event-list">
         <h2>Upcoming Events</h2>
@@ -101,7 +67,7 @@ export default {
       apiService
           .addEvent(this.newEvent)
           .then(() => {
-            // Clear the form
+            // sprazni forms
             this.newEvent = {
               title: '',
               sport: '',
@@ -109,14 +75,13 @@ export default {
               max_participants: null,
               description: '',
             };
-            // Refresh the list
+            //refreša
             this.getEvents();
           })
           .catch(error => {
             console.error(error);
           });
     },
-    // Delete an event
     deleteEvent(event) {
       apiService
           .deleteEvent(event)
@@ -127,7 +92,6 @@ export default {
             console.error(error);
           });
     },
-    // Logout method
   },
   mounted() {
     // this.events = apiService.getEvents();
@@ -155,7 +119,6 @@ header {
   position: relative;
 }
 
-/* Form Styling */
 .add-event-form {
   margin: 20px 0;
   text-align: left;
@@ -195,7 +158,7 @@ header {
   background-color: #2a976e;
 }
 
-/* Events List Styling */
+
 .event-list {
   text-align: left;
   margin-top: 40px;

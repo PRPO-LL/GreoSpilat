@@ -4,7 +4,6 @@
     <div class="social-links">
       <a href="https://github.com/PRPO-LL/GreoSpilat" aria-label="Github"><i class="fab fa-github"></i></a>
       <a href="https://www.instagram.com/lukabele/" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-      <!-- Add more social links as needed -->
     </div>
   </footer>
 </template>
@@ -43,6 +42,5 @@ export default {
   color: #42b983;
 }
 
-/* Optional: Include Font Awesome for social icons */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 </style>
