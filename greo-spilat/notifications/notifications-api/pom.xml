@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>notifications</artifactId>
+        <groupId>si.luka2.prpo.sportapp</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>notifications-api</artifactId>
+
+    <dependencies>
+        <!-- Core KumuluzEE dependencies -->
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-servlet-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-jax-rs-jersey</artifactId>
+        </dependency>
+
+        <!-- OpenAPI and CORS -->
+        <dependency>
+            <groupId>com.kumuluz.ee.openapi</groupId>
+            <artifactId>kumuluzee-openapi-mp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.openapi</groupId>
+            <artifactId>kumuluzee-openapi-mp-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.cors</groupId>
+            <artifactId>kumuluzee-cors</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.kumuluz.ee.health</groupId>
+            <artifactId>kumuluzee-health</artifactId>
+        </dependency>
+
+        <!-- Config -->
+        <dependency>
+            <groupId>com.kumuluz.ee.config</groupId>
+            <artifactId>kumuluzee-config-mp</artifactId>
+        </dependency>
+
+        <!-- Messaging (for queuing notifications) -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.16.0</version>
+        </dependency>
+
+
+        <!-- Dependencies from other modules -->
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>notifications-bizLogic</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>notifications-persistance</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- KumuluzEE plugin for packaging -->
+            <plugin>
+                <groupId>com.kumuluz.ee</groupId>
+                <artifactId>kumuluzee-maven-plugin</artifactId>
+                <version>${kumuluzee.version}</version>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>
