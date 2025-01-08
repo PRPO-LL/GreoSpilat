@@ -1,5 +1,5 @@
 group "default" {
-  targets = ["auth-service", "user-service","event-service"]
+  targets = ["auth-service", "user-service","event-service","frontend-service"]
 }
 
 target "auth-service" {
@@ -23,3 +23,16 @@ target "event-service" {
   tags       = ["lukaexmedicinec/prpo-ll:event-service"]
 }
 
+target "notification-service" {
+  context    = "./notifications"
+  dockerfile = "Dockerfile"
+  platforms  = ["linux/amd64", "linux/arm64"]
+  tags       = ["lukaexmedicinec/prpo-ll:notifications-service"]
+}
+
+target "frontend-service" {
+  context    = "../greo-spilat-web/"
+  dockerfile = "Dockerfile"
+  platforms  = ["linux/amd64", "linux/arm64"]
+  tags       = ["lukaexmedicinec/prpo-ll:frontend-service"]
+}
