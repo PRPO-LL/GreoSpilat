@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: lukaexmedicinec/prpo-ll:user-service
+          ports:
+            - containerPort: 8084
+          env:
+            - name: DB_HOST
+              value: "postgres-service"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "events_users"
+            - name: DB_USERNAME
+              value: "luka"
+            - name: DB_PASSWORD
+              value: "luka"
+
+            - name: AUTH_API_URL
+              value: "http://auth-service:8085/v1"
+            - name: USERS_SERVICE_URL
+              value: "http://user-service:8084/v1"
+            - name: EVENTS_SERVICE_URL
+              value: "http://event-service:8083/v1"

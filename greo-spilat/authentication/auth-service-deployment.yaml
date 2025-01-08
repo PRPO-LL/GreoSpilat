@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  template:
+    metadata:
+      labels:
+        app: auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: lukaexmedicinec/prpo-ll:auth-service
+          ports:
+            - containerPort: 8085
+          env:
+            # Example environment variables
+            - name: DB_HOST
+              value: "postgres-service"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "events_users"
+            - name: DB_USERNAME
+              value: "luka"
+            - name: DB_PASSWORD
+              value: "luka"
+
+            # If you have internal references to other microservices
+            - name: AUTH_API_URL
+              value: "http://auth-service:8085"
+            - name: USERS_SERVICE_URL
+              value: "http://user-service:8084"
+            - name: EVENTS_SERVICE_URL
+              value: "http://event-service:8083"

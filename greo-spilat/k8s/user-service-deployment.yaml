@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: user-service
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: user-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: user-service
+    spec:
+      containers:
+        - env:
+            - name: AUTH_API_URL
+              value: http://auth-service:8085/v1
+            - name: DB_HOST
+              value: postgres
+            - name: DB_NAME
+              value: events_users
+            - name: DB_PASSWORD
+              value: luka
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              value: luka
+            - name: EVENTS_SERVICE_URL
+              value: http://event-service:8083/v1
+            - name: USERS_SERVICE_URL
+              value: http://user-service:8084/v1
+          image: lukaexmedicinec/prpo-ll:user-service
+          name: user-service
+          ports:
+            - containerPort: 8084
+              protocol: TCP
+      restartPolicy: Always
