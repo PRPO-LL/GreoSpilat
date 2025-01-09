@@ -37,6 +37,8 @@ integrations:
     base-url: http://auth-service:8085/v1
   events:
     base-url: http://event-service:8083/v1
+  notifications:
+    base-url: http://notifications-service:8401/v1
 
 
 #kumuluzee:

@@ -6,15 +6,9 @@ kumuluzee:
       port: 8401
   env:
     name: dev
-#  datasources:
-#    - jndi-name: jdbc/sportappDS
-#      connection-url: jdbc:postgresql://localhost:5432/sportapp
-#      username: luka
-#      password: luka
-#      max-pool-size: 20
   datasources:
     - jndi-name: jdbc/sportappDS
-      connection-url: jdbc:postgresql://postgres:5432/sportapp
+      connection-url: jdbc:postgresql://postgres:5432/events_users
       username: luka
       password: luka
       max-pool-size: 20
@@ -22,3 +16,15 @@ kumuluzee:
     levels:
       ROOT: INFO
       si.luka2.prpo.sportapp.beans.NotificationBean: DEBUG
+  rest-client:
+    registrations:
+      - class: users-api
+        url: http://notifications-service:8401/v1
+        read-timeout: 5000
+  integrations:
+    authentication:
+      base-url: http://auth-service:8085/v1
+    events:
+      base-url: http://event-service:8083/v1
+    users:
+      base-url: http://user-service:8084/v1
