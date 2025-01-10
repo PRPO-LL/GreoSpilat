@@ -1,9 +1,5 @@
-#group "default" {
-#  targets = ["auth-service", "user-service","event-service","frontend-service"]
-#}
-
 group "default" {
-  targets = ["notification-service"]
+  targets = ["auth-service", "user-service","event-service","frontend-service","notification-service"]
 }
 
 target "auth-service" {
