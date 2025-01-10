@@ -52,7 +52,7 @@ public class UserResource {
     public Response getUsers(){
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
 
-        List<User> users = userBean.getUsers();
+        List<User> users = userBean.getUsers(query);
         Long totalCount = userBean.getUserCount(null);
 
         return Response.ok(users, MediaType.APPLICATION_JSON)

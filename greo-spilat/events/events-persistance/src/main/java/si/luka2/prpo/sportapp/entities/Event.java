@@ -38,7 +38,7 @@ public class Event {
     private Integer max_participants;
 
 
-    public Integer getId(){return this.event_id;}
+    public Integer getIid(){return this.event_id;}
     public String getTitle(){return this.title;}
     public String getDescription(){return this.description;}
     public String getLocation(){return this.location;}

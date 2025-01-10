@@ -43,8 +43,8 @@ public class EventResource {
     @GET
     public Response getEvents(){
         QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-
-        List<Event> events = eventsBean.getEvents();
+        System.out.println("Sparsani QueryParameters: " + query.toString());
+        List<Event> events = eventsBean.getEvents(query);
         Long totalCount = eventsBean.getEventsCount(null);
 
         return Response.ok(events, MediaType.APPLICATION_JSON)

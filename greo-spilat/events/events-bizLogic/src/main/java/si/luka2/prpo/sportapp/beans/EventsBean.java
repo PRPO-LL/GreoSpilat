@@ -1,6 +1,7 @@
 package si.luka2.prpo.sportapp.beans;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import si.luka2.prpo.sportapp.entities.Event;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,9 +42,11 @@ public class EventsBean {
         TypedQuery<Long> q = em.createQuery(strng.toString(), Long.class);
         return q.getSingleResult();
     }
-    public List<Event> getEvents() {
-        return em.createNamedQuery("Event.getAll", Event.class).getResultList();
+    public List<Event> getEvents(QueryParameters query) {
+        //        return em.createNamedQuery("Event.getAll", Event.class).getResultList();
+        return JPAUtils.queryEntities(em, Event.class, query);
     }
+
 
 
     public Event getEvent(int eventId) {
