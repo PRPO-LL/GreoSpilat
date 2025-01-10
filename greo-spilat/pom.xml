@@ -19,18 +19,6 @@
     </modules>
     <dependencies>
         <dependency>
-            <groupId>si.luka2.prpo.sportapp</groupId>
-            <artifactId>users-persistance</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>si.luka2.prpo.sportapp</groupId>
-            <artifactId>users-persistance</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>si.luka2.prpo.sportapp</groupId>
-            <artifactId>events-persistance</artifactId>
-        </dependency>
-        <dependency>
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <version>2.1.6</version>
