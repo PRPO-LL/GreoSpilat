@@ -27,7 +27,7 @@
         <div v-if="registerError" class="error-message">
           Username already exists, please try again.
         </div>
-        <button type="submit" class="btn">register</button>
+        <button type="submit" class="btn">Register</button>
       </form>
 
       <div v-else class="success-message">
