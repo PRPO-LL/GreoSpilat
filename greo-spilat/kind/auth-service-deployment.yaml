@@ -21,25 +21,8 @@ spec:
         io.kompose.service: auth-service
     spec:
       containers:
-        - env:
-            - name: AUTH_API_URL
-              value: http://auth-service:8085/v1
-            - name: DB_HOST
-              value: postgres
-            - name: DB_NAME
-              value: events_users
-            - name: DB_PASSWORD
-              value: luka
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_USERNAME
-              value: luka
-            - name: EVENTS_SERVICE_URL
-              value: http://event-service:8083/v1
-            - name: USERS_SERVICE_URL
-              value: http://user-service:8084/v1
+        - name: auth-service
           image: lukaexmedicinec/prpo-ll:auth-service
-          name: auth-service
           ports:
             - containerPort: 8085
               protocol: TCP

@@ -5,12 +5,6 @@ kumuluzee:
   version: 1.0.0
   env:
     name: dev
-#  datasources:
-#    - jndi-name: jdbc/sportappDS
-#      connection-url: jdbc:postgresql://localhost:5432/events_users
-#      username: luka
-#      password: luka
-#      max-pool-size: 20
   datasources:
     - jndi-name: jdbc/sportappDS
 #      connection-url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -32,10 +26,3 @@ kumuluzee:
       - class: events-api
         url: http://event-service:8083/v1
         read-timeout: 5000
-integrations:
-  authentication:
-    base-url: http://auth-service:8085/v1
-  users:
-    base-url: http://user-service:8084/v1
-  notifications:
-    base-url: http://notifications-service:8401/v1
