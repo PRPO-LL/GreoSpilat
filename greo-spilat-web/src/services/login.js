@@ -18,6 +18,10 @@ export default {
         });
     },
     login(user){
+        console.log('Request payload:', {
+            username: user.username,
+            password: user.password,
+        });
         return apiClient.post('/login', {
             username: user.username,
             password: user.password,

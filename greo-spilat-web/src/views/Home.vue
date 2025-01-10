@@ -1,10 +1,20 @@
 
 <template>
   <div id="home">
-    <Header @logout="logout()"/>
+    <Header/>
     <main>
+      <div class="search-bar">
+        <input
+            id="search"
+            @input="getEvents($event.target.value)"
+            type="text"
+            placeholder="Search for events"
+        />
+        <button @click="novEvent()">Create event</button>
+      </div>
       <div class="event-list">
-        <h2>Upcoming Events</h2>
+
+        <h2 >All events</h2>
         <div
             class="event-card"
             v-for="event in events"
@@ -15,8 +25,8 @@
           <p><strong>Location:</strong> {{ event.location }}</p>
   <!--        <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>-->
           <p>{{ event.description }}</p>
-
-          <button @click="deleteEvent(event)">Delete</button>
+          <button @click="joinEvent(event)">Join</button>
+<!--          <button @click="deleteEvent(event)">Delete</button>-->
         </div>
       </div>
     </main>
@@ -40,6 +50,7 @@ export default {
     return {
       events: [],
       newEvent: {
+        iid: '',
         title: '',
         sport: '',
         location: '',
@@ -53,36 +64,18 @@ export default {
   },
   methods: {
     handleError,
-    getEvents() {
+    getEvents(filter = '') {
       apiService
-          .getEvents()
+          .getEvents(filter)
           .then(response => {
             this.events = response.data;
           })
           .catch(error => {
-            console.error(error);
-          });
-    },
-    addEvent() {
-      apiService
-          .addEvent(this.newEvent)
-          .then(() => {
-            // sprazni forms
-            this.newEvent = {
-              title: '',
-              sport: '',
-              location: '',
-              max_participants: null,
-              description: '',
-            };
-            //refreša
-            this.getEvents();
-          })
-          .catch(error => {
-            console.error(error);
+            console.error("Spodletel poskus filtracije:", error);
           });
     },
     deleteEvent(event) {
+      console.log('Deleting event:', event);
       apiService
           .deleteEvent(event)
           .then(() => {
@@ -92,6 +85,12 @@ export default {
             console.error(error);
           });
     },
+    joinEvent(){
+      //logika za join event
+    },
+    novEvent(){
+      this.$router.push('/newEvent');
+    }
   },
   mounted() {
     // this.events = apiService.getEvents();
@@ -121,6 +120,11 @@ header {
 
 .add-event-form {
   margin: 20px 0;
+  text-align: left;
+}
+.form-group {
+  margin-bottom: 1rem;
+  margin-top: 40px;
   text-align: left;
 }
 
@@ -158,10 +162,31 @@ header {
   background-color: #2a976e;
 }
 
+.search-bar {
+  margin: 20px;
+  text-align: center;
+}
+
+.search-bar input {
+  width: 90%;
+  max-width: 600px;
+  padding: 12px 20px;
+  font-size: 18px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s;
+}
+
+.search-bar input:focus {
+  border-color: #42b983;
+  outline: none;
+}
+
 
 .event-list {
   text-align: left;
-  margin-top: 40px;
+  margin-top: 0px;
 }
 
 .event-list h2 {
@@ -183,9 +208,21 @@ header {
 .event-card p {
   margin: 5px 0;
 }
+.search-bar button{
+  background-color: #097969;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.search-bar button:hover {
+  background-color: #AFE1AF;
+}
 
 .event-card button {
-  background-color: #ff4d4d;
+  background-color: #097969;
   color: #fff;
   border: none;
   padding: 6px 10px;
@@ -195,6 +232,6 @@ header {
 }
 
 .event-card button:hover {
-  background-color: #ff1a1a;
+  background-color: #AFE1AF;
 }
 </style>

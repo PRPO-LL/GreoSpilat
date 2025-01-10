@@ -4,6 +4,7 @@ import LoginPage from '../views/Login.vue'
 // import Register from '../views/Register.vue'
 import HomePage from '../views/Home.vue'
 import RegisterPage from '../views/Register.vue'
+import NewEventPage from '../views/NewEvent.vue'
 
 const routes = [
     {
@@ -25,6 +26,11 @@ const routes = [
         name: 'Home',
         component: HomePage,
     },
+    {
+        path: '/newEvent',
+        name: 'NewEvent',
+        component: NewEventPage,
+    }
 ];
 
 const router = createRouter({
