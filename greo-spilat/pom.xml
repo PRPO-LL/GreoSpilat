@@ -15,7 +15,46 @@
         <module>events</module>
         <module>authentication</module>
         <module>notifications</module>
+        <module>comments</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>users-persistance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>users-persistance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>si.luka2.prpo.sportapp</groupId>
+            <artifactId>events-persistance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>2.1.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <version>2.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId>
+            <version>1.1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>2.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
     <name>Greo Spilat app</name>
     <description> App za mreženje športnikov </description>

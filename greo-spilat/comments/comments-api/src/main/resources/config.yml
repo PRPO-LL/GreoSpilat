@@ -1,0 +1,32 @@
+kumuluzee:
+  name: comments-api
+  version: 1.0.0
+  server:
+    http:
+      port: 8402
+  env:
+    name: dev
+  datasources:
+    - jndi-name: jdbc/sportappDS
+      connection-url: jdbc:postgresql://postgres:5432/events_users
+      username: luka
+      password: luka
+      max-pool-size: 20
+  logs:
+    levels:
+      ROOT: INFO
+      si.luka2.prpo.sportapp.beans.CommentBean: DEBUG
+  rest-client:
+    registrations:
+      - class: comments-api
+        url: http://comments-service:8402/v1
+        read-timeout: 5000
+  integrations:
+    authentication:
+      base-url: http://auth-service:8085/v1
+    events:
+      base-url: http://event-service:8083/v1
+    users:
+      base-url: http://user-service:8084/v1
+    notifications:
+      base-url: http://notifications-service:8401/v1

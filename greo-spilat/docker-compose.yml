@@ -70,6 +70,20 @@ services:
     depends_on:
       - postgres
 
+  comments-service:
+    build:
+      context: ./comments
+      dockerfile: Dockerfile
+    image: greo-spilat/comments-service:1.0
+    container_name: comments-service
+    restart: always
+    ports:
+      - "8402:8402"
+    #    networks:
+    #      - app-network
+    depends_on:
+      - postgres
+
 
 volumes:
   postgres-data: {}
