@@ -67,7 +67,10 @@ public class EventResource {
             @APIResponse(responseCode = "200",
                     description = "En event",
                     content = @Content(schema = @Schema(implementation = Event.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+            description = "Uporabnik ni bil najden")
+    })
     @RolesAllowed("user")
     @GET
     @Path("{id}")
@@ -127,7 +130,7 @@ public class EventResource {
         }
         if(novi == null){
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Spodletel poskus kreacije eventa")
+                    .entity("Napaka pri dodajanju eventa")
                     .build();
         }
 
@@ -142,7 +145,7 @@ public class EventResource {
                     responseCode = "201",
                     content = @Content(schema = @Schema(implementation = Event.class, type = SchemaType.OBJECT))),
 
-            @APIResponse(responseCode = "400",
+            @APIResponse(responseCode = "304",
                     description = "Napaka pri posodabljanju uporabnika")
 
     })
@@ -235,7 +238,7 @@ public class EventResource {
         }
         if(!zbrisan){
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Spodletel poskus brisanja eventa")
+                    .entity("Napaka pri brisanju eventa")
                     .build();
         }
 

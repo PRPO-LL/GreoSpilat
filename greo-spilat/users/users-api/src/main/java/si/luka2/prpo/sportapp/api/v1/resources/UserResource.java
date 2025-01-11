@@ -73,7 +73,11 @@ public class UserResource {
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
                     content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+                description = "Uporanik ni bil najden"
+            )
+    })
     @RolesAllowed("user")
     @GET
     @Path("{id}")

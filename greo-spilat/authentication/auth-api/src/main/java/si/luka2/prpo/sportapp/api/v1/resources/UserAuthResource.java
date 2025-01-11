@@ -51,7 +51,11 @@ public class UserAuthResource {
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+            description = "Uporabniki niso bili najdeni"
+    )
+    })
     @RolesAllowed("user")
     @GET
     @Path("all")
@@ -70,7 +74,12 @@ public class UserAuthResource {
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+                    description = "Uporabnik ni bil najden"
+            )
+
+    })
     @RolesAllowed("user")
     @GET
     @Path("{username}")
@@ -155,7 +164,11 @@ public class UserAuthResource {
             @APIResponse(responseCode = "200",
                     description = "login",
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+                description = "Spodletel poskus brisanja uporabnika"
+            )
+    })
     @RolesAllowed("user")
     @POST
     @Path("/login")
@@ -177,8 +190,8 @@ public class UserAuthResource {
     @APIResponses({
             @APIResponse(description = "Uporabnik uspešno izbrisan",
                     responseCode = "204"),
-            @APIResponse(responseCode = "400",
-                    description = "Napaka pri brisanju uporabnika")
+            @APIResponse(responseCode = "404",
+                    description = "Spodletel poskus brisanja uporabnika")
 
     })
     @RolesAllowed("user")
@@ -223,11 +236,11 @@ public class UserAuthResource {
     }
     @Operation(description = "Validacija tokena", summary = "validacija")
     @APIResponses({
-            @APIResponse(description = "Token is valid",
+            @APIResponse(description = "Token je validen",
                     responseCode = "200"),
-            @APIResponse(description = "Auth header missing",
+            @APIResponse(description = "Auth header manjka",
                     responseCode = "400"),
-            @APIResponse(description = "Token has expired",
+            @APIResponse(description = "Token je potekel",
                     responseCode = "401"),
 
     })
@@ -238,17 +251,17 @@ public class UserAuthResource {
         String header = headers.getHeaderString("Authorization");
         if(header == null){
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Auth header missing")
+                    .entity("Auth header manjka")
                     .build();
         }
         int id = JwtService.validateToken(header);
         if(id < 0){
             return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity("Token has expired")
+                    .entity("Token je potekel")
                     .build();
         }
         else{
-            Response.ResponseBuilder builder = Response.ok("Token is valid");
+            Response.ResponseBuilder builder = Response.ok("Token je validen");
             builder.header("Id", id);
             builder.header("Authorization", header);
             return builder.build();
