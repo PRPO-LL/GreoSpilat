@@ -47,12 +47,46 @@ public class CommentBean {
     }
 
     @Transactional
-    public Comment addComment(Comment comment) {
-        comment.setCreatedAt(java.time.LocalDateTime.now());
+    public Comment addComment(Comment comment, int userId, int eventId) {
+        User user = findUserById(userId);
+        Event event = findEventById(eventId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User with ID " + userId + " does not exist.");
+        }
+
+        if (event == null) {
+            throw new IllegalArgumentException("Event with ID " + eventId + " does not exist.");
+        }
+
+        comment.setUser(user);
+        comment.setEvent(event);
+
         em.persist(comment);
-        logger.info("Comment added: " + comment.getContent());
         return comment;
     }
+
+    @Transactional
+    public Comment addReply(Comment reply, Comment parentComment, int userId, int eventId) {
+        User user = findUserById(userId);
+        Event event = findEventById(eventId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("User with ID " + userId + " does not exist.");
+        }
+
+        if (event == null) {
+            throw new IllegalArgumentException("Event with ID " + eventId + " does not exist.");
+        }
+
+        reply.setParentComment(parentComment);
+        reply.setUser(user);
+        reply.setEvent(event);
+
+        em.persist(reply);
+        return reply;
+    }
+
 
     @Transactional
     public boolean likeComment(int commentId) {
@@ -74,6 +108,26 @@ public class CommentBean {
             return true;
         }
         return false;
+    }
+
+    public List<Comment> getCommentsByEvent(int eventId) {
+        return em.createQuery("SELECT c FROM Comment c WHERE c.event.event_id = :eventId", Comment.class)
+                .setParameter("eventId", eventId)
+                .getResultList();
+    }
+
+    public List<Comment> getCommentsByUser(int userId) {
+        return em.createQuery("SELECT c FROM Comment c WHERE c.user.user_id = :userId", Comment.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    public User findUserById(int userId) {
+        return em.find(User.class, userId);
+    }
+
+    public Event findEventById(int eventId) {
+        return em.find(Event.class, eventId);
     }
 
 }

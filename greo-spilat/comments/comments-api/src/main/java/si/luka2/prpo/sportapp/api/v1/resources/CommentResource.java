@@ -30,27 +30,39 @@ public class CommentResource {
     @Context
     private UriInfo uriInfo;
 
-    @Operation(summary = "Create a comment", description = "Adds a new comment")
+    @Operation(summary = "Create a comment", description = "Adds a new comment associated with a user and an event")
     @APIResponse(responseCode = "201", description = "Comment created successfully")
     @APIResponse(responseCode = "400", description = "Invalid comment data")
+    @APIResponse(responseCode = "404", description = "User or Event not found")
     @APIResponse(responseCode = "500", description = "Failed to create comment")
     @POST
-    public Response createComment(@Valid Comment comment) {
-        if (comment == null || comment.getContent() == null ) {
+    public Response createComment(@Valid Comment comment, @QueryParam("userId") int userId, @QueryParam("eventId") int eventId) {
+        // Validate the input data
+        if (comment == null || comment.getContent() == null || comment.getContent().trim().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid comment data. Content, user, and event are required.")
+                    .entity("Invalid comment data. Content, user ID, and event ID are required.")
                     .build();
         }
 
-        Comment created = commentBean.addComment(comment);
-        if (created == null) {
+        if (userId <= 0 || eventId <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid user ID or event ID. Both must be positive integers.")
+                    .build();
+        }
+
+        try {
+            Comment createdComment = commentBean.addComment(comment, userId, eventId);
+
+            return Response.status(Response.Status.CREATED).entity(createdComment).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Failed to create comment due to server error.")
                     .build();
         }
-
-        return Response.status(Response.Status.CREATED).entity(created).build();
     }
+
 
     @Operation(summary = "Reply to a comment", description = "Creates a reply to an existing comment")
     @APIResponse(responseCode = "201", description = "Reply created successfully")
@@ -59,40 +71,49 @@ public class CommentResource {
     @APIResponse(responseCode = "500", description = "Failed to create reply due to server error")
     @POST
     @Path("/reply/{id}")
-    public Response createReply(@PathParam("id") int parentCommentId, Comment reply) {
-        if (reply == null || reply.getContent() == null) {
+    public Response createReply(@PathParam("id") int parentCommentId, @Valid Comment reply,
+                                @QueryParam("userId") int userId, @QueryParam("eventId") int eventId) {
+
+        if (reply == null || reply.getContent() == null || reply.getContent().trim().isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid reply data. Content, user, and event are required.")
+                    .entity("Invalid reply data. Content is required.")
                     .build();
         }
 
-        // Fetch the parent comment
-        Comment parentComment = commentBean.getCommentById(parentCommentId);
-        if (parentComment == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Parent comment with ID " + parentCommentId + " not found.")
+        if (userId <= 0 || eventId <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid user ID or event ID. Both must be positive integers.")
                     .build();
         }
 
-        // Set the parent comment for the reply
-        reply.setParentComment(parentComment);
+        try {
 
-        // Persist the reply
-        Comment createdReply = commentBean.addComment(reply);
-        if (createdReply == null || createdReply.getId() == null) {
+            Comment parentComment = commentBean.getCommentById(parentCommentId);
+            if (parentComment == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Parent comment with ID " + parentCommentId + " not found.")
+                        .build();
+            }
+
+
+            Comment createdReply = commentBean.addReply(reply, parentComment, userId, eventId);
+
+            return Response.status(Response.Status.CREATED).entity(createdReply).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Failed to create reply due to server error.")
                     .build();
         }
-
-        return Response.status(Response.Status.CREATED).entity(createdReply).build();
     }
+
 
     @Operation(summary = "Like a comment", description = "Increments the like count of a specific comment")
     @APIResponse(responseCode = "200", description = "Comment liked successfully")
     @APIResponse(responseCode = "400", description = "Invalid comment ID provided")
     @APIResponse(responseCode = "404", description = "Comment not found")
-    @POST
+    @PUT
     @Path("/{id}/like")
     public Response likeComment(@PathParam("id") int id) {
         if (id <= 0) {
@@ -134,7 +155,55 @@ public class CommentResource {
         return Response.ok(replies).build();
     }
 
-    @Operation(summary = "Delete a comment and all its replies", description = "Deletes a comment and all its associated replies")
+    @Operation(summary = "Get all comments for an event", description = "Fetches all comments associated with a specific event")
+    @APIResponse(responseCode = "200", description = "List of comments retrieved successfully")
+    @APIResponse(responseCode = "204", description = "No comments found for the given event ID")
+    @APIResponse(responseCode = "400", description = "Invalid event ID provided")
+    @GET
+    @Path("/event/{eventId}")
+    public Response getCommentsByEvent(@PathParam("eventId") int eventId) {
+        if (eventId <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid event ID. Event ID must be a positive integer.")
+                    .build();
+        }
+
+        List<Comment> comments = commentBean.getCommentsByEvent(eventId);
+        if (comments == null || comments.isEmpty()) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .entity("No comments found for the given event ID.")
+                    .build();
+        }
+
+        return Response.ok(comments).build();
+    }
+
+
+    @Operation(summary = "Get all comments by a user", description = "Fetches all comments created by a specific user")
+    @APIResponse(responseCode = "200", description = "List of comments retrieved successfully")
+    @APIResponse(responseCode = "204", description = "No comments found for the given user ID")
+    @APIResponse(responseCode = "400", description = "Invalid user ID provided")
+    @GET
+    @Path("/user/{userId}")
+    public Response getCommentsByUser(@PathParam("userId") int userId) {
+        if (userId <= 0) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Invalid user ID. User ID must be a positive integer.")
+                    .build();
+        }
+
+        List<Comment> comments = commentBean.getCommentsByUser(userId);
+        if (comments == null || comments.isEmpty()) {
+            return Response.status(Response.Status.NO_CONTENT)
+                    .entity("No comments found for the given user ID.")
+                    .build();
+        }
+
+        return Response.ok(comments).build();
+    }
+
+
+    @Operation(summary = "Delete a comment and all its replies", description = "Deletes a comment")
     @APIResponse(responseCode = "204", description = "Comment and its replies deleted successfully")
     @APIResponse(responseCode = "400", description = "Invalid comment ID provided")
     @APIResponse(responseCode = "404", description = "Comment not found")

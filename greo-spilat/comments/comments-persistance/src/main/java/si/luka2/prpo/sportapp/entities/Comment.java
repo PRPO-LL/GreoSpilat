@@ -4,6 +4,7 @@ import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 @Entity
@@ -28,17 +29,23 @@ public class Comment {
     @Column(nullable = false)
     private Integer likes = 0;
 
-    // Self-referential relationship: A comment can reply to another comment
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
     @JsonbTransient
     private Comment parentComment;
 
-    // One-to-Many: A comment can have multiple replies
-
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonbTransient
     private List<Comment> replies = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
 
     public Comment() {
         this.createdAt = LocalDateTime.now();
@@ -92,6 +99,14 @@ public class Comment {
     public void setReplies(List<Comment> replies) {
         this.replies = replies;
     }
+
+    public User getUser() {return user;}
+
+    public void setUser(User user) {this.user = user;}
+
+    public Event getEvent() {return event;}
+
+    public void setEvent(Event event) {this.event = event;}
 
     @Override
     public String toString() {
