@@ -184,7 +184,8 @@ public class UserAuthResource {
     @RolesAllowed("user")
     @DELETE
     @Path("/delete")
-    public Response deleteUser(RegisterUserDTO user) {
+    public Response deleteUser(@Context HttpHeaders headers,RegisterUserDTO user) {
+        String header = headers.getHeaderString("Authorization");
         httpClient = HttpClientBuilder.create().build();
         basePath = "http://user-service:8084/v1/";
         // inicializacija virov
@@ -192,6 +193,7 @@ public class UserAuthResource {
         UserAuth userAuth = userAuthBean.getUser(user.getUsername());
         try{
             HttpDelete httpDelete = new HttpDelete(basePath + "users/delete/" + userAuth.getId());
+            httpDelete.addHeader("Authorization", header);
             HttpResponse httpResponse = httpClient.executeOpen(null, httpDelete, null);
 
             int status = httpResponse.getCode();

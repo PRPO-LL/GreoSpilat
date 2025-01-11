@@ -50,6 +50,10 @@
             <groupId>si.luka2.prpo.sportapp</groupId>
             <artifactId>users-bizLogic</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

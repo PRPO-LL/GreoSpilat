@@ -6,6 +6,11 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ProtocolException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
@@ -20,6 +25,7 @@ import si.luka2.prpo.sportapp.beans.JwtService;
 import si.luka2.prpo.sportapp.entities.User;
 import si.luka2.prpo.sportapp.beans.UserBean;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -33,6 +39,8 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
     private Logger log = Logger.getLogger(UserResource.class.getName());
+    private CloseableHttpClient httpClient;
+    private String basePath;
     private final static int adminId = 1;
     @Context
     private UriInfo uriInfo;
@@ -124,10 +132,32 @@ public class UserResource {
     @PATCH
     @Path("/update/{id}")
     public Response updateUser(@Context HttpHeaders headers,@PathParam("id") int uporabnikId, User user) {
+        httpClient = HttpClientBuilder.create().build();
+        basePath = "http://auth-service:8085/v1/";
         String header = headers.getHeaderString("Authorization");
         User novi = null;
+        int id = -1;
         if (header != null) {
-            int id = JwtService.validateToken(header);
+            //int id = JwtService.validateToken(header);
+            try {
+                HttpPost post = new HttpPost(basePath + "auth/validate");
+                post.setHeader("Authorization", header);
+                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+
+                int code = httpResponse.getCode();
+                if (code == 200) {
+                    org.apache.hc.core5.http.Header idHeader = httpResponse.getHeader("Id");
+                    id = Integer.parseInt(idHeader.getValue());
+                }
+            } catch (IOException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new InternalServerErrorException(e);
+            } catch (ProtocolException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new RuntimeException(e);
+            }
             if(uporabnikId == id || id == adminId){
                 novi = userBean.updateUser(uporabnikId, user);
             }
@@ -157,10 +187,32 @@ public class UserResource {
     @DELETE
     @Path("/delete/{id}")
     public Response deleteUser(@Context HttpHeaders headers,@PathParam("id") int uporabnikId) {
+        httpClient = HttpClientBuilder.create().build();
+        basePath = "http://auth-service:8085/v1/";
         String header = headers.getHeaderString("Authorization");
         boolean novi = false;
+        int id = -1;
         if (header != null) {
-            int id = JwtService.validateToken(header);
+//            int id = JwtService.validateToken(header);
+            try {
+                HttpPost post = new HttpPost(basePath + "auth/validate");
+                post.setHeader("Authorization", header);
+                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+
+                int code = httpResponse.getCode();
+                if (code == 200) {
+                    org.apache.hc.core5.http.Header idHeader = httpResponse.getHeader("Id");
+                    id = Integer.parseInt(idHeader.getValue());
+                }
+            } catch (IOException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new InternalServerErrorException(e);
+            } catch (ProtocolException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new RuntimeException(e);
+            }
             if(uporabnikId == id || id == adminId){
                 novi = userBean.deleteUser(uporabnikId);
             }
