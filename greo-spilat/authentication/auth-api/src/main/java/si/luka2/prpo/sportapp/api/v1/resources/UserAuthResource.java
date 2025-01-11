@@ -25,10 +25,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
@@ -198,7 +195,6 @@ public class UserAuthResource {
             HttpResponse httpResponse = httpClient.executeOpen(null, httpDelete, null);
 
             int status = httpResponse.getCode();
-
             if(status == 204){
                 if(userAuthBean.deleteUser(user))
                     return Response.noContent().build();
@@ -223,5 +219,39 @@ public class UserAuthResource {
             throw new InternalServerErrorException(e);
         }
     }
+    @Operation(description = "Validacija tokena", summary = "validacija")
+    @APIResponses({
+            @APIResponse(description = "Token is valid",
+                    responseCode = "200"),
+            @APIResponse(description = "Auth header missing",
+                    responseCode = "400"),
+            @APIResponse(description = "Token has expired",
+                    responseCode = "401"),
+
+    })
+    @RolesAllowed("user")
+    @POST
+    @Path("/validate")
+    public Response validateToken(@Context HttpHeaders headers) {
+        String header = headers.getHeaderString("Authorization");
+        if(header == null){
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Auth header missing")
+                    .build();
+        }
+        int id = JwtService.validateToken(header);
+        if(id < 0){
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Token has expired")
+                    .build();
+        }
+        else{
+            Response.ResponseBuilder builder = Response.ok("Token is valid");
+            builder.header("Id", id);
+            builder.header("Authorization", header);
+            return builder.build();
+        }
+    }
+
 
 }

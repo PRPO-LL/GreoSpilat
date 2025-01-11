@@ -2,6 +2,11 @@ package si.luka2.prpo.sportapp.api.v1.resources;
 
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ProtocolException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
@@ -18,13 +23,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 @Path("events")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class EventResource {
+    private Logger log = Logger.getLogger(Event.class.getName());
+    private CloseableHttpClient httpClient;
+    private String basePath;
     private final static int adminId = 1;
     @Context
     private UriInfo uriInfo;
@@ -83,10 +93,35 @@ public class EventResource {
     @POST
     @Path("/add")
     public Response addEvent(@Context HttpHeaders headers, Event event) { //argument ki je passan tukaj, se doda cez klic APIja
+        httpClient = HttpClientBuilder.create().build();
+        basePath = "http://auth-service:8085/v1/";
         String header = headers.getHeaderString("Authorization");
+
         Event novi = null;
+        int id = -1;
         if (header != null) {
-            int id = JwtService.validateToken(header);
+            //int id = JwtService.validateToken(header);
+            try {
+                HttpPost post = new HttpPost(basePath + "auth/validate");
+                post.setHeader("Authorization", header);
+                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+
+                int code = httpResponse.getCode();
+                if (code == 200) {
+                    org.apache.hc.core5.http.Header idHeader = httpResponse.getHeader("Id");
+                    id = Integer.parseInt(idHeader.getValue());
+                }
+            } catch (IOException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new InternalServerErrorException(e);
+            } catch (ProtocolException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new RuntimeException(e);
+            }
+        }
+        if(id > 0){
             event.setCreatorId(id);
             novi = eventsBean.addEvent(event); // recimo v postmanu ko mas body POSTa
         }
@@ -115,11 +150,33 @@ public class EventResource {
     @PATCH
     @Path("/update/{id}")
     public Response updateEvent(@Context HttpHeaders headers,@PathParam("id") int eventId,Event event) {
+        httpClient = HttpClientBuilder.create().build();
+        basePath = "http://auth-service:8085/v1/";
         String header = headers.getHeaderString("Authorization");
         Event novi = null;
         Event stari = eventsBean.getEvent(eventId);
+        int id = -1;
         if (header != null) {
-            int id = JwtService.validateToken(header);
+//            int id = JwtService.validateToken(header);
+            try {
+                HttpPost post = new HttpPost(basePath + "auth/validate");
+                post.setHeader("Authorization", header);
+                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+
+                int code = httpResponse.getCode();
+                if (code == 200) {
+                    org.apache.hc.core5.http.Header idHeader = httpResponse.getHeader("Id");
+                    id = Integer.parseInt(idHeader.getValue());
+                }
+            } catch (IOException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new InternalServerErrorException(e);
+            } catch (ProtocolException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new RuntimeException(e);
+            }
             if(id == stari.getCreatorId() || id == adminId)
                 novi = eventsBean.updateEvent(eventId,event); // recimo v postmanu ko mas body POSTa
         }
@@ -146,11 +203,33 @@ public class EventResource {
     @DELETE
     @Path("/delete/{id}")
     public Response deleteEvent(@Context HttpHeaders headers,@PathParam("id") int eventId) {
+        httpClient = HttpClientBuilder.create().build();
+        basePath = "http://auth-service:8085/v1/";
         String header = headers.getHeaderString("Authorization");
         Event novi = eventsBean.getEvent(eventId);
         boolean zbrisan = false;
+        int id = -1;
         if (header != null) {
-            int id = JwtService.validateToken(header);
+//            int id = JwtService.validateToken(header);
+            try {
+                HttpPost post = new HttpPost(basePath + "auth/validate");
+                post.setHeader("Authorization", header);
+                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+
+                int code = httpResponse.getCode();
+                if (code == 200) {
+                    org.apache.hc.core5.http.Header idHeader = httpResponse.getHeader("Id");
+                    id = Integer.parseInt(idHeader.getValue());
+                }
+            } catch (IOException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new InternalServerErrorException(e);
+            } catch (ProtocolException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new RuntimeException(e);
+            }
             if(id == novi.getCreatorId() || id == adminId)
                 zbrisan = eventsBean.deleteEvent(eventId);
         }
