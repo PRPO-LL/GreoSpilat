@@ -1,9 +1,9 @@
 kumuluzee:
-  name: comments-api
+  name: join-api
   version: 1.0.0
   server:
     http:
-      port: 8402
+      port: 8403
   env:
     name: dev
   datasources:
@@ -18,8 +18,8 @@ kumuluzee:
       si.luka2.prpo.sportapp.beans.CommentBean: DEBUG
   rest-client:
     registrations:
-      - class: comments-api
-        url: http://comments-service:8402/v1
+      - class: join-api
+        url: http://join-service:8403/v1
         read-timeout: 5000
   integrations:
     authentication:
@@ -30,5 +30,5 @@ kumuluzee:
       base-url: http://user-service:8084/v1
     notifications:
       base-url: http://notifications-service:8401/v1
-    join:
-      base-url: http://join-service:8403/v1
+    comments:
+      base-url: http://comments-service:8402/v1

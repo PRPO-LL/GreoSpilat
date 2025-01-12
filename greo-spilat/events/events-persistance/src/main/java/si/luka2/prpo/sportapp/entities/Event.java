@@ -37,6 +37,8 @@ public class Event {
     @Column(name = "max_participants")
     private Integer max_participants;
 
+    @Column(name = "participants", nullable = false)
+    private int participants = 1;
 
     public Integer getIid(){return this.event_id;}
     public String getTitle(){return this.title;}
@@ -46,6 +48,7 @@ public class Event {
     public LocalDateTime getDate(){return this.startTime;}
     public Integer getCreatorId(){return this.creator_id;}
     public Integer getMaxParticipants(){return this.max_participants;}
+    public int getParticipants() {return participants;}
 
     public void setId(Integer event_id){this.event_id = event_id;}
     public void setTitle(String title){this.title = title;}
@@ -55,6 +58,7 @@ public class Event {
     public void setDate(LocalDateTime startTime){this.startTime = startTime;}
     public void setCreatorId(Integer creator_id){this.creator_id = creator_id;}
     public void setMaxParticipants(Integer max_participants){this.max_participants = max_participants;}
+    public void setParticipants(int participants) {this.participants = participants;}
 
     @Override
     public String toString() {

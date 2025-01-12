@@ -84,6 +84,20 @@ services:
     depends_on:
       - postgres
 
+  join-service:
+    build:
+      context: ./join
+      dockerfile: Dockerfile
+    image: greo-spilat/join-service:1.0
+    container_name: join-service
+    restart: always
+    ports:
+      - "8403:8403"
+    #    networks:
+    #      - app-network
+    depends_on:
+      - postgres
+
 
 volumes:
   postgres-data: {}

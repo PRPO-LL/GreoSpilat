@@ -16,6 +16,7 @@
         <module>authentication</module>
         <module>notifications</module>
         <module>comments</module>
+        <module>join</module>
     </modules>
     <dependencies>
         <dependency>

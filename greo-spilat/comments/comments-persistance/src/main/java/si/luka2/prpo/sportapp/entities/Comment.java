@@ -4,7 +4,6 @@ import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 @Entity

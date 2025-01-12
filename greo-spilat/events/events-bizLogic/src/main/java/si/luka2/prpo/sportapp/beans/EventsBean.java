@@ -98,4 +98,34 @@ public class EventsBean {
         log.info("Event not found");
         return false;
     }
+
+    @Transactional
+    public boolean incrementParticipants(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        if (event == null) {
+            return false;
+        }
+
+        if (event.getParticipants() >= event.getMaxParticipants()) {
+            throw new IllegalArgumentException("Maximum participants limit reached for this event.");
+        }
+
+        event.setParticipants(event.getParticipants() + 1);
+        em.merge(event);
+        return true;
+    }
+
+
+    @Transactional
+    public boolean decrementParticipants(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        if (event == null || event.getParticipants() <= 0) {
+            return false; // Prevent negative participant count
+        }
+
+        event.setParticipants(event.getParticipants() - 1);
+        em.merge(event);
+        return true;
+    }
+
 }
