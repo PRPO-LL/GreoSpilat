@@ -166,7 +166,7 @@ public class UserAuthResource {
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
             ),
             @APIResponse(responseCode = "404",
-                description = "Spodletel poskus brisanja uporabnika"
+                description = "Spodletel poskus logiranja uporabnika"
             )
     })
     @RolesAllowed("user")

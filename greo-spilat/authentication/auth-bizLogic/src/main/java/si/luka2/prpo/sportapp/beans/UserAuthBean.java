@@ -73,7 +73,7 @@ public class UserAuthBean {
         return em.createNamedQuery("User.getAll", UserAuth.class).getResultList();
     }
 
-    //ustvari userja, mu hasha password, ustvari userja v users tabeli!
+    //ustvari userja, mu hasha password
     @Transactional
     public UserAuth createUser(RegisterUserDTO user) {
         if(user.getUsername()== null || user.getPassword() == null) {
@@ -88,34 +88,6 @@ public class UserAuthBean {
         newUser.setUsername(user.getUsername());
         newUser.setHashPassword(hash.getResult());
         em.persist(newUser);
-
-//        try{
-//            HttpPost httpPost = new HttpPost(basePath + "users/add");
-//            httpPost.setHeader("Content-Type", "application/json");
-//            ObjectNode userJson = objectMapper.createObjectNode();
-//            userJson.put("username", user.getUsername());
-//            userJson.put("user_id", newUser.getId());
-//
-//            String payload = userJson.toString();
-//
-//            httpPost.setEntity(new StringEntity(payload, ContentType.APPLICATION_JSON));
-//            HttpResponse httpResponse = httpClient.executeOpen(null, httpPost, null);
-//
-//            int status = httpResponse.getCode();
-//
-//            if(status >= 200 && status < 300) {
-//                return newUser;
-//            }
-//            else{
-//                String msg = "Remote server " + basePath + "responded with status " + status;
-//                log.info(msg);
-//                throw new InternalServerErrorException(msg);
-//            }
-//        } catch (IOException e) {
-//            String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
-//            log.info(msg);
-//            throw new InternalServerErrorException(e);
-//        }
         return newUser;
     }
     //tukaj treba dodat vračanje jwt tokena

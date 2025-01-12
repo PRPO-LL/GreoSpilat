@@ -8,7 +8,7 @@ metadata:
     io.kompose.service: auth-service
   name: auth-service
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: auth-service
@@ -26,6 +26,13 @@ spec:
           ports:
             - containerPort: 8085
               protocol: TCP
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
           livenessProbe:
             httpGet:
               path: /health/live

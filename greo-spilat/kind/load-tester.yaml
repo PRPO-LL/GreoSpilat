@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: load-tester
+spec:
+  containers:
+    - name: load-tester
+      image: demisto/rakyll-hey:1.0.0.108484
+      command: ["sleep", "3600"]

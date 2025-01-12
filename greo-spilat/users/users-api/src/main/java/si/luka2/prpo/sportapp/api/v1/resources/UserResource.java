@@ -48,7 +48,7 @@ public class UserResource {
     @Inject
     private UserBean userBean; //injectali referenco na uporabniško zrno
 
-    @Operation(description = "Vrne seznam vseh uporabnikov", summary = "dodajanje")
+    @Operation(description = "Vrne seznam vseh uporabnikov", summary = "uporabniki")
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "Seznam uporabnikov",
@@ -68,7 +68,7 @@ public class UserResource {
                 .build();
     }
 
-    @Operation(description = "Vrne enega uporabnik.", summary = "uporabnik")
+    @Operation(description = "Vrne enega uporabnika.", summary = "uporabnik")
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
@@ -128,8 +128,8 @@ public class UserResource {
                     responseCode = "201",
                     content = @Content(schema = @Schema(implementation = User.class, type = SchemaType.OBJECT))),
 
-            @APIResponse(responseCode = "400",
-                    description = "Napaka pri posodabljanju uporabnika")
+            @APIResponse(responseCode = "304",
+                    description = "Spodletel poskus posodobitve uporabnika")
 
     })
     @RolesAllowed("user")
@@ -183,8 +183,8 @@ public class UserResource {
     @APIResponses({
             @APIResponse(description = "Uporabnik uspešno izbrisan",
                     responseCode = "204"),
-            @APIResponse(responseCode = "400",
-                    description = "Napaka pri brisanju uporabnika")
+            @APIResponse(responseCode = "404",
+                    description = "Uporabnik ni bil najden")
 
     })
     @RolesAllowed("user")

@@ -43,7 +43,6 @@ public class EventsBean {
         return q.getSingleResult();
     }
     public List<Event> getEvents(QueryParameters query) {
-        //        return em.createNamedQuery("Event.getAll", Event.class).getResultList();
         return JPAUtils.queryEntities(em, Event.class, query);
     }
 

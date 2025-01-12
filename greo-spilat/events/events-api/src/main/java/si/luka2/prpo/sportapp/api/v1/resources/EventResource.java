@@ -69,7 +69,7 @@ public class EventResource {
                     content = @Content(schema = @Schema(implementation = Event.class, type = SchemaType.OBJECT))
             ),
             @APIResponse(responseCode = "404",
-                    description = "Uporabnik ni bil najden")
+            description = "Event ni bil najden")
     })
     @RolesAllowed("user")
     @GET
@@ -244,66 +244,5 @@ public class EventResource {
 
         return Response.noContent().build();
     }
-
-    @Operation(summary = "Update event participants", description = "Increments or decrements the participant counter of an event when a user joins or leaves.")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Participant count updated successfully."),
-            @APIResponse(responseCode = "400", description = "Invalid event ID or action."),
-            @APIResponse(responseCode = "404", description = "Event not found."),
-            @APIResponse(responseCode = "409", description = "Event is already full!"),
-            @APIResponse(responseCode = "500", description = "Failed to update participant count due to server error.")
-    })
-    @RolesAllowed("user")
-    @PUT
-    @Path("/{id}/participants")
-    public Response updateParticipants(@PathParam("id") int eventId, @QueryParam("action") String action) {
-        if (eventId <= 0 || action == null || (!action.equalsIgnoreCase("join") && !action.equalsIgnoreCase("leave"))) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid event ID or action. Action must be 'join' or 'leave'.")
-                    .build();
-        }
-
-        Event event = eventsBean.getEvent(eventId);
-        if (event == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Event with ID " + eventId + " not found.")
-                    .build();
-        }
-
-        try {
-            boolean updated = false;
-
-            if (action.equalsIgnoreCase("join")) {
-                updated = eventsBean.incrementParticipants(eventId);
-            } else if (action.equalsIgnoreCase("leave")) {
-                updated = eventsBean.decrementParticipants(eventId);
-            }
-
-            if (!updated) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Failed to update participant count. Check the event state.")
-                        .build();
-            }
-
-            Event novi = eventsBean.getEvent(eventId);
-            if (novi == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Event with ID after inc/dec" + eventId + " not found.")
-                        .build();
-            }
-
-            return Response.ok(novi).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(e.getMessage())
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Failed to update participant count due to server error.")
-                    .build();
-        }
-    }
-
-
 
 }
