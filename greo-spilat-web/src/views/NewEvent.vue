@@ -42,7 +42,7 @@
           <label for="max-participants">Max Participants</label>
           <input
               id="max-participants"
-              v-model="newEvent.max_participants"
+              v-model="newEvent.maxParticipants"
               type="number"
               min="1"
               placeholder="Enter the maximum number of participants"
@@ -88,7 +88,7 @@ export default {
         title: '',
         sport: '',
         location: '',
-        max_participants: null,
+        maxParticipants: null,
         description: '',
       },
       addEventError: false,
@@ -144,9 +144,9 @@ export default {
   margin: 20px auto;
   max-width: 800px;
   text-align: center;
-  background: linear-gradient(to right, #f9fafb, #ffffff); /* Subtle gradient background */
+  background: linear-gradient(to right, #f9fafb, #ffffff);
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a shadow for depth */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 

@@ -21,14 +21,14 @@ export default {
             sport: event.sport,
             description: event.description,
             location: event.location,
-            max_participants: event.max_participants,
+            maxParticipants: event.maxParticipants,
         });
         return apiClient.post('/add', {
             title: event.title,
             sport: event.sport,
             description: event.description,
             location:   event.location,
-            max_participants: event.max_participants,
+            maxParticipants: event.maxParticipants,
         }, {
             headers: {
                 Authorization: token, // Append the Authorization header
@@ -47,6 +47,6 @@ export default {
         //logika za join event
     },
     getEvent(event){
-        return apiClient.get('/' + event.iid);
+        return apiClient.get('/' + event);
     }
 };

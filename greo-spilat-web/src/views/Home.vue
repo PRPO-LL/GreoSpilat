@@ -16,16 +16,17 @@
 
         <h2 >All events</h2>
         <div
-            class="event-card"
+            class="event-card clickable-card"
             v-for="event in events"
             :key="event.id"
+            @click="goToEvent(event.iid)"
         >
           <h3>{{ event.title }}</h3>
           <p><strong>Sport:</strong> {{ event.sport }}</p>
           <p><strong>Location:</strong> {{ event.location }}</p>
   <!--        <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>-->
           <p>{{ event.description }}</p>
-          <button @click="joinEvent(event)">Join</button>
+<!--          <button @click="joinEvent(event)">Join</button>-->
 <!--          <button @click="deleteEvent(event)">Delete</button>-->
         </div>
       </div>
@@ -85,8 +86,9 @@ export default {
             console.error(error);
           });
     },
-    joinEvent(){
-      //logika za join event
+    goToEvent(eventId) {
+      // console.log("Ta event" + eventId);
+      this.$router.push(`/event/${eventId}`); // Navigate to the event details page
     },
     novEvent(){
       this.$router.push('/newEvent');
@@ -199,6 +201,10 @@ header {
   padding: 20px;
   border-radius: 6px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+}
+.event-card:hover{
+  background-color: #d6f5d6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .event-card h3 {
