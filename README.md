@@ -104,6 +104,12 @@ Aplikacija preko katere testiramo API mikrostoritev, v njem lahko oblikujemo kol
 
 ![arhitektura](slike/postman.jpg)
 
+### Podatkovna baza
+
+Uporabljava PostgreSQL podatkovno bazo, ki jo v Dockerju zaženemo kot svojo sliko in v docker-compose definiramo njene porte. Spodaj je predstavljen konceptualni model relacij. 
+
+![arhitektura](slike/Konceptualni.drawio.png)
+
 
 **Mikrostoritve**
 - Authentication
@@ -114,6 +120,9 @@ Aplikacija preko katere testiramo API mikrostoritev, v njem lahko oblikujemo kol
 - Notifications
 
 #### Opis mikrostoritev #####
+
+Dokumentacija API-jev je dostopna na https://apiidocs.tiiny.site/ .
+
 ##### Authentication
 Mikrostoritev je namenjena avtentikaciji in avtorizaciji uporabnika. Uporablja se
 za registracijo uporabnika, hrani šifrirana gesla in uporabniška imena. Ob prijavi
