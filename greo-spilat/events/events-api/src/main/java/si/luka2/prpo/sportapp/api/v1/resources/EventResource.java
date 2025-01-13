@@ -2,11 +2,16 @@ package si.luka2.prpo.sportapp.api.v1.resources;
 
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.ProtocolException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
@@ -21,9 +26,15 @@ import si.luka2.prpo.sportapp.beans.JwtService;
 import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -97,7 +108,8 @@ public class EventResource {
     @Path("/add")
     public Response addEvent(@Context HttpHeaders headers, Event event) { //argument ki je passan tukaj, se doda cez klic APIja
         httpClient = HttpClientBuilder.create().build();
-        basePath = "http://auth-service:8085/v1/";
+        String authPath = "http://auth-service:8085/v1/";
+        String joinPath = "http://join-service:8403/v1/";
         String header = headers.getHeaderString("Authorization");
 
         Event novi = null;
@@ -105,9 +117,9 @@ public class EventResource {
         if (header != null) {
             //int id = JwtService.validateToken(header);
             try {
-                HttpPost post = new HttpPost(basePath + "auth/validate");
+                HttpPost post = new HttpPost(authPath + "auth/validate");
                 post.setHeader("Authorization", header);
-                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+                HttpResponse httpResponse = httpClient.execute(post);
 
                 int code = httpResponse.getCode();
                 if (code == 200) {
@@ -127,6 +139,32 @@ public class EventResource {
         if(id > 0){
             event.setCreatorId(id);
             novi = eventsBean.addEvent(event); // recimo v postmanu ko mas body POSTa
+            Integer eventId = novi.getIid();
+
+            try {
+                HttpPost post = new HttpPost(joinPath + "join");
+                post.setHeader("Authorization", header);
+
+                // Add body with userId and eventId
+                String jsonBody = "{\"userId\": " + id + ", \"eventId\": " + eventId + "}";
+                post.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
+
+                HttpResponse httpResponse = httpClient.executeOpen(null, post, null);
+
+                int code = httpResponse.getCode();
+                if (code == 200) {
+                    org.apache.hc.core5.http.Header idHeader = httpResponse.getHeader("Id");
+                    id = Integer.parseInt(idHeader.getValue());
+                }
+            } catch (IOException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new InternalServerErrorException(e);
+            } catch (ProtocolException e) {
+                String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                log.info(msg);
+                throw new RuntimeException(e);
+            }
         }
         if(novi == null){
             return Response.status(Response.Status.BAD_REQUEST)
@@ -244,6 +282,7 @@ public class EventResource {
 
         return Response.noContent().build();
     }
+
     @Operation(summary = "Update event participants", description = "Increments or decrements the participant counter of an event when a user joins or leaves.")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Participant count updated successfully."),
@@ -256,35 +295,101 @@ public class EventResource {
     @PUT
     @Path("/{id}/participants")
     public Response updateParticipants(@PathParam("id") int eventId, @QueryParam("action") String action) {
+        String notificationPath = "http://notifications-service:8401/v1/";
+
         if (eventId <= 0 || action == null || (!action.equalsIgnoreCase("join") && !action.equalsIgnoreCase("leave"))) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Invalid event ID or action. Action must be 'join' or 'leave'.")
                     .build();
         }
+
         Event event = eventsBean.getEvent(eventId);
         if (event == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Event with ID " + eventId + " not found.")
                     .build();
         }
+
         try {
             boolean updated = false;
+
             if (action.equalsIgnoreCase("join")) {
                 updated = eventsBean.incrementParticipants(eventId);
             } else if (action.equalsIgnoreCase("leave")) {
                 updated = eventsBean.decrementParticipants(eventId);
             }
+
             if (!updated) {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity("Failed to update participant count. Check the event state.")
                         .build();
             }
+
             Event novi = eventsBean.getEvent(eventId);
             if (novi == null) {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Event with ID after inc/dec" + eventId + " not found.")
                         .build();
             }
+
+            Integer participants = novi.getParticipants();
+            Integer maxParticipants = novi.getMaxParticipants();
+            List<Integer> userIds = null;
+            if (participants == maxParticipants) {
+                try {
+                    String joinServicePath = "http://localhost:8403/v1/join/event/" + novi.getIid();
+                    HttpGet getRequest = new HttpGet(joinServicePath);
+                    HttpResponse joinResponse = httpClient.execute(getRequest);
+
+                    if (joinResponse.getCode() == 200) {
+                        String userIdsHeader = joinResponse.getHeader("User-IDs").getValue();
+                        userIds = new ArrayList<>();
+
+                        if (userIdsHeader != null && !userIdsHeader.isEmpty()) {
+                            for (String userId : userIdsHeader.split(",")) {
+                                userIds.add(Integer.parseInt(userId.trim()));
+                            }
+                        }
+                        log.info("User IDs retrieved from header: " + userIds);
+                    } else {
+                        log.warning("Failed to fetch user IDs from join service. Status: " + joinResponse.getCode());
+                    }
+
+                    if (!userIds.isEmpty()) {
+                        List<JsonObject> notifications = new ArrayList<>();
+                        for (Integer userId : userIds) {
+                            JsonObject notification = Json.createObjectBuilder()
+                                    .add("recipientId", userId)
+                                    .add("recipientType", "USER")
+                                    .add("message", "Event " + novi.getTitle() + " you joined is filled! HF")
+                                    .add("type", "ALERT")
+                                    .build();
+                            notifications.add(notification);
+                        }
+
+                        JsonArray notificationArray = Json.createArrayBuilder(notifications).build();
+
+                        HttpPost bulkNotificationPost = new HttpPost(notificationPath + "notifications/bulk");
+                        bulkNotificationPost.setEntity(new StringEntity(notificationArray.toString(), ContentType.APPLICATION_JSON));
+
+                        HttpResponse notificationResponse = httpClient.executeOpen(null, bulkNotificationPost, null);
+                        if (notificationResponse.getCode() == 201) {
+                            log.info("Bulk notifications sent successfully.");
+                        } else {
+                            log.warning("Failed to send bulk notifications. Status: " + notificationResponse.getCode());
+                        }
+                    }
+                } catch (IOException e) {
+                    String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                    log.info(msg);
+                    throw new InternalServerErrorException(e);
+                } catch (ProtocolException e) {
+                    String msg = e.getClass().getSimpleName() + " occured " + e.getMessage();
+                    log.info(msg);
+                    throw new RuntimeException(e);
+                }
+            }
+
             return Response.ok(novi).build();
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.CONFLICT)
@@ -296,5 +401,7 @@ public class EventResource {
                     .build();
         }
     }
+
+
 
 }

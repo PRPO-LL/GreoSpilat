@@ -8,6 +8,9 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -85,7 +88,7 @@ public class JoinResource {
 
 
     @Operation(summary = "Get all joins for an event", description = "Fetches all users who have joined a specific event.")
-    @APIResponse(responseCode = "200", description = "List of users who joined the event retrieved successfully.")
+    @APIResponse(responseCode = "200", description = "List of user IDs who joined the event retrieved successfully.")
     @APIResponse(responseCode = "204", description = "No users have joined the event.")
     @APIResponse(responseCode = "400", description = "Invalid event ID provided.")
     @GET
@@ -104,7 +107,18 @@ public class JoinResource {
                     .build();
         }
 
-        return Response.ok(joins).build();
+        // Extract user IDs into a JSON array
+        JsonArrayBuilder userIdsArrayBuilder = Json.createArrayBuilder();
+        for (Joins join : joins) {
+            if (join.getUser() != null) {
+                userIdsArrayBuilder.add(join.getUser().getUser_id());
+            }
+        }
+
+        JsonArray userIdsArray = userIdsArrayBuilder.build();
+        return Response.ok()
+                .header("User-IDs", userIdsArray.toString())
+                .build();
     }
 
     @Operation(summary = "Get all joins for a user", description = "Fetches all events joined by a specific user.")
