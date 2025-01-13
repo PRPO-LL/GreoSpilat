@@ -101,61 +101,64 @@ Z nalaganjem yaml opisov REST virov in shem, ki nam jih generira OpenAPI dobimo 
 
 
 **Mikrostoritve**
-- Uporabniški račun
-- Usvarjanje dogodkov / lastnih pobud za športanje
-- Zemljevid športnih dogodkov
-- Obveščanje o novih dogodkih
-- MojProfil
-- Nastavitve
-- Admin panel
+- Authentication
+- Users
+- Events
+- Comments
+- Join
+- Notifications
 
-##### Opis mikrostoritev #####
-###### Uporabniški račun ######
+#### Opis mikrostoritev #####
+##### Authentication
+Mikrostoritev je namenjena avtentikaciji in avtorizaciji uporabnika. Uporablja se
+za registracijo uporabnika, hrani šifrirana gesla in uporabniška imena. Ob prijavi
+generira tudi JWT žetone, ki jih druge mikrostoritve uporabljajo za avtorizacijo
+in avtentikacijo. Vsebuje tudi konˇcne toˇcke za avtentikacijo JWT žetonov.
+##### Users
+Mikrostoritev je namenjena upravljanju uporabnikov. Uporabniki lahko spre-
+minjajo svoj raˇcun ali pa izbrišejo profil. Povezana je z mikrostoritvijami join,
+event, comments in notifications.
+##### Events
+Mikrostoritev je namenjena upravljanju dogodkov, ustvarjanju, spreminjanju in
+brisanju dogodkov. Kakor mikrostoritev user, je tudi events povezana z vsemi
+ostalimi mikrostoritvami.
+##### Notifications
+Naloga Notifications je ustvarjanje in opravljanje z obvestili, s klicem POST
+post izpostav ustvarjamo obvestila, ki se persistirajo v podatkovno bazo za na-
+men nadaljne obdelave. Poleg vsebine obvestila hranimo tudi njegov status.
+GET izpostave vraˇcajo toˇcno doloˇceno obvestilo ali vsa obvestila namenjena
+doloˇcenemu uporabniku.
+##### Comments
+S komentarji upravlja storitev Comments. Komentar je z relacijo ManyToOne
+veže uporabnika in dogodek preko njunih id-jev, lahko pa tudi drug komentar
+z rekurzivno referenco na comment_id, s tem je podprta funkcionalnost replik
+na komentar. Poleg ustvarjanja komentarjev in replik, brisanja in vraˇcanja
+komentarjev glede na uporabnika ali dogodek ena od izpostav omogoˇca tudi
+všeˇckanje komentarjev.
+##### Join
+Join upravlja z razmerjem many-to-many med uporabniki in dogodki, ki se
+preslika v podatkovno bazo joins s tujim kljuˇcem iz vsake strani. Opravlja pri-
 
-Glavna opravila te mikrostoritve so kreacija, vračanje, posadabljanje in brisanje uporabniških računov. Prav tako ima storitev svojo podatkovno bazo kjer hrani vse atribute. Preko internega APIja komunicira s drugimi storitvami kot so; zemljevid športnih dogodkov, moj profil, admin panel,...
+#### Ogrodje in razvojno okolje
+Zaledje aplikacije je grajeno v javanskem frameworku KumuluzEE, ki bazira
+na JavaEE. Uporabila sva ga za gradnjo mikrostoritev in implementacijo REST
+APIjev. Za podatkovno bazo sva uporabila PostgreSQL, kjer so shranjeni vsi
+podatki aplikacije. Docker je bil uporabljen za kontejnerizacijo aplikacij, kar je
+omogoˇcilo enostavno izvajanje mikrostoritev v izoliranem okolju. Uporabljen
+je bil v povezavi s tehnologijo Docker Compose, za povezovanje mikrostoritev
+in hkratno orkestracijo. Sprednji del aplikacije je grajen z Vue.js, ki je JavaScript
+framework za gradnjo uporabniških vmesnikov. Za realizacijo Kubernetes clustra
+na lokalnem okolju sma uporabila orodje kind.
 
-Mikrostoritev bo preko Kafke ali RabbitMQ omogočala sporočanje drugim mikrostoritvam, ko je uporabnik "online" in pripravljen za športanje. Viden bo tudi na zemljevidu.
+#### Knjižnjice in mehanizmi
+• Axios→ naslavljanje HTTP zahtevkov na zaledje.
+• JWT→ uporabljen za avtentikacijo in avtorizacijo uporabnikov.
+• Password4j→ uporabljen za enkripcijo in verifikacijo gesel
+• JPA→ upravljanje relacijskih podatkov z objekti.
+• CORS filtri→ omogoˇcanje pošiljanja HTTP zahtevkov ˇcez razliˇcne domene
+#### Razvojna okolja in orodja
+• IntelliJ IDEA→ razvojno okolje.
+• Postman→ orodje za testiranje REST API zahtevkov
+• GitHub→ orodje za nadzor razliˇcic in upravljanje z repozitoriji.
 
-###### Usvarjanje dogodkov ######
-
-Mikrostoritev skrbi za uporabniško kreirane dogodke, jih dodaja, spreminja in briše. Sodeluje tesno z mikrostoritvijo za obveščanje o dogodkih in povabilih ter zemljevidom športnih dogodkov. Možna je tudi izvedba ponavljajočih se dogodkov (nedeljska košarka). Storitev ima prav tako svojo podatkovno bazo interni API preko katerega komunicira s drugimi mikrostoritvami. 
-
-###### Zemljevid športnih dogodkov ######
-
-Zemljevid športnih dogodkov je zadolžena za prostorsko in lokacijsko prikazovanje dogodkov. Uporabnikom omogoča da dogodke najdejo in z njimi interaktirajo. Integrirala bo mapping API (GoogleMaps, OpenStreetMaps) in skrbela za querije in filtre iskanja ter vizualizacijo. 
-
-###### Obveščanje o novih dogodkih in povabila ######
-
-Mikrostoritev ki skrbi za obveščanje in povabila bo zadolžena še za odgovore na povabila, reagirala bo na nove evente, updejte ali uporabniške vnose. Push notifikacije v mobilni verziji*.
-Omogočala bo tudi časovno razporejanje obvestil in sledenje komu so bila obvestila poslana in njihov odziv na njih. 
-
-###### MojProfil ######
-
-Mikrostoritev mojProfil bo zadolžena ze upravljanje z uporabniškim profilom znotraj sistema. Osredotočala se bo na spreminjanje obstoječega profila, nastavljanje preferenc, radiusa zaznavanja,...
-Komunicirala bo z isto bazo kot mikrostoritev za uporabniške račune.
-
-###### Admin panel ######
-
-Admin panel administratorjem omogoča upravljanje in nadzor sistema, moderiranje objav in profilov. Namenjena je dostopu do ostalih mikrostoritev za potrebe moderiranja in spreminjanja. 
-
-
-###### Nastavitve ######
-
-Kakor admin panel upravlja sistem na ravni administratorja, ga nastavite na ravni uporabnika. Vsak si lahko konfigurira svojo uporabniško izkušnjo s nastavitvami jezika, obvestil, teme, privatnosti,... 
-
-#### Orodja ######
-Nekatera so navedena že v shemi
-- Meaven
-- IntelliJ
-- jetty
-- JAX-RS
-- Kubernetes 
-- KumuluzEE
-- postgreSQL
-- Postman
-- Kafke ali RabbitMQ
-
-
-#### Arhitektura #####
-![arhitektura](arhitektura_spil.png)
 
