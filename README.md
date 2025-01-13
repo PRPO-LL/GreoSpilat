@@ -98,6 +98,11 @@ Orodje za sprotno dokumentiranje specifikacije, kar v kodi. Javanske funkcije an
 
 Z nalaganjem yaml opisov REST virov in shem, ki nam jih generira OpenAPI dobimo vizualno reprezentacijo, ki je ena od bolj popularnih in lahkih za uporabo orodij za dokumentacijo API-jev.
 
+### Postman
+
+Aplikacija preko katere testiramo API mikrostoritev, v njem lahko oblikujemo kolekcije in shranimo pogoste klice za ponovljivo testiranje. Izberemo tip zahtevka (GET, POST, PUT, DELETE), naslovimo MS z URL-jem in vključimo potrebne Header-je in JSON telo. Postman nam prav tako pokaže kaj nam zahtevek vrne (odzivno kodo, telo, headerje). Spodaj je primer nekaj shranjenih klicov v Postmanu. 
+
+![arhitektura](slike/postman.jpg)
 
 
 **Mikrostoritve**
