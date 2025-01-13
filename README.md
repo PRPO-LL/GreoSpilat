@@ -167,4 +167,42 @@ na lokalnem okolju sma uporabila orodje kind.
 - Postman→ orodje za testiranje REST API zahtevkov
 - GitHub→ orodje za nadzor razliˇcic in upravljanje z repozitoriji.
 
+#### Lokalno testiranje frontend
+
+Za lokalno testiranje uporabimo ```npm run serve``` kjer se vse spremembe na kodi v živo poznajo tudi na izpostavljenem localhost portu!
+
+Za izgradnjo aplikacije uporabimo ```npm run build``` , ostalo uredi Dockerfile.
+
+#### Lokalno testiranje z docker compose
+Docker compose ustvari kontejner kjer bivajo mikrostoritve, frontend in podatkovna baza, glede na konfiguracijo ```docker-compose.yaml```ki je v direktoriju ```./greo-spilat```.
+
+Za testiranje lahko poženemo docker kontejner z komando ```docker compose up --build```.
+To aplikacijo zgradi in jo požene. Če odstranimo zastavico ```--build```pa jo samo požene.
+
+V primeru da želimo aplikacijo ponovno izgraditi ali pa zgolj zaustaviti aplikacijo uporabimo
+```docker compose down```
+
+Bodisi zaradi površnosti ali pa drugih napak se velikokrat pojavijo 'dangling nodes', to so slike, ki niso bile pravilno odstranjene.
+
+Za odstranitev le teh uporabimo ```docker system prune```
+
+#### Lokalno testiranje na kind Kubernetes clustru
+
+Za uporabljanje slik v kubernetes clustru moramo prvo slike zgraditi in jih naložiti na naš DockerHub repozitorij. To storimo s komando ```docker buildx bake --push```, ki glede na specifikacije v ```docker-bake.hcl```zgradi slike in jih naloži na repozitorij.
+
+Če želimo iz docker-compose.yaml dobiti konfiguracije za vzpostavitev na kubernetes gruči lahko uporabimo orodje ```kompose```in komando ```kompose convert```, ki generira konfiguracijske datoteke za vse slike.
+
+Za lokalno realizacijo kubernetes gruče uporabljamo orodje ```kind```.
+
+Za ustvarjenje clustra uporabimo komando```kind create cluster --config=kind-config.yml``` ki iz konfiguracijske datoteke zgradi gručo.
+
+Da lahko uporabljamo kubernetes CLI orodje moramo nastaviti kontekst
+```kubectl config use-context kind-greo-spilat```
+
+Ko je gruča vzpostavljena lahko začnemo z dodajanjem servisov in deploymentov s komando
+```kubectl apply -f <ime_servisa/deploymenta>```
+
+Če želimo dostopati to baze ali pa izvajat HTTP zahtevke nad mikrostoritvami moramo porte znotraj gruče preusmeriti v lokalno okolje.
+``` kubectl port-forward svc/postgres 5432:5432 & ```
+
 
