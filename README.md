@@ -4,6 +4,7 @@
 - [x] Implement entity and persistance modules for userEvents
 - [ ] DTO for transfering User via user_id to the database
 - [ ] Communication via API with the Event microservice
+- [ ] test
 
 ## Greo spilat ##
 
