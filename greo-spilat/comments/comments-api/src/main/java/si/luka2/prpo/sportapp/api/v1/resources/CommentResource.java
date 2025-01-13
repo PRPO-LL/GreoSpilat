@@ -168,13 +168,13 @@ public class CommentResource {
         }
 
         List<Comment> comments = commentBean.getCommentsByEvent(eventId);
-        if (comments == null || comments.isEmpty()) {
+        if (comments == null) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity("No comments found for the given event ID.")
                     .build();
         }
 
-        return Response.ok(comments).build();
+        return Response.ok(comments,MediaType.APPLICATION_JSON).build();
     }
 
 

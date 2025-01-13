@@ -15,7 +15,7 @@ export default {
   text-align: center;
   margin: 0;
   background: linear-gradient(to right, #A7F1A8, #BFF4BE);
-  min-height: 100vh;
+  min-height: 150vh;
   display: flex;
   flex-direction: column;
 }

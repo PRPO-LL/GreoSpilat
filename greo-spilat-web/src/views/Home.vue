@@ -24,28 +24,28 @@
           <h3>{{ event.title }}</h3>
           <p><strong>Sport:</strong> {{ event.sport }}</p>
           <p><strong>Location:</strong> {{ event.location }}</p>
-  <!--        <p><strong>Max Participants:</strong> {{ event.max_participants }}</p>-->
-          <p>{{ event.description }}</p>
+          <p><strong>Date:</strong> {{ formatDateTime(event.date) }}</p>
+<!--          <p>{{ event.description }}</p>-->
 <!--          <button @click="joinEvent(event)">Join</button>-->
 <!--          <button @click="deleteEvent(event)">Delete</button>-->
         </div>
       </div>
     </main>
-    <Footer/>
+<!--    <Footer/>-->
   </div>
 </template>
 
 <script>
 import apiService from '../services/events.js';
 import Header from '../components/Header.vue';
-import Footer from '../components/Footer.vue';
+// import Footer from '../components/Footer.vue';
 import {handleError} from "vue";
 
 export default {
   name: 'AppHome',
   components: {
     Header,
-    Footer,
+    // Footer,
   },
   data() {
     return {
@@ -90,6 +90,17 @@ export default {
       // console.log("Ta event" + eventId);
       this.$router.push(`/event/${eventId}`); // Navigate to the event details page
     },
+    formatDateTime(dateTimeString) {
+      const date = new Date(dateTimeString);
+      return date.toLocaleString('sl', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+    },
     novEvent(){
       this.$router.push('/newEvent');
     }
@@ -110,6 +121,7 @@ export default {
 }
 
 main {
+  margin-top: 20px;
   padding: 20px;
 }
 

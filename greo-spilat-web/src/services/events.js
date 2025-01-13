@@ -7,6 +7,13 @@ const apiClient = axios.create({
     },
 });
 
+const apiClientComment = axios.create({
+    baseURL: 'http://localhost:8402/v1/comments',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
 export default {
     getEvents(filter = '') {
         // const url = filter ? `?(filter=title:LIKE:'%${filter}%' OR filter=sport:LIKE:'%${filter}%' OR filter=location:LIKE:'%${filter}%')` : '';
@@ -22,6 +29,7 @@ export default {
             description: event.description,
             location: event.location,
             maxParticipants: event.maxParticipants,
+            date: event.date,
         });
         return apiClient.post('/add', {
             title: event.title,
@@ -29,6 +37,7 @@ export default {
             description: event.description,
             location:   event.location,
             maxParticipants: event.maxParticipants,
+            date: event.date,
         }, {
             headers: {
                 Authorization: token, // Append the Authorization header
@@ -42,6 +51,14 @@ export default {
                 Authorization: token,
             }
         });
+    },
+    getComments(event){
+        return apiClientComment.get('/event/'+ event);
+    },
+    addComment(comment){
+        return apiClientComment.post('?userId='+comment.id+'&eventId='+comment.eventId, {
+            content: comment.content,
+        })
     },
     joinEvent(){
         //logika za join event

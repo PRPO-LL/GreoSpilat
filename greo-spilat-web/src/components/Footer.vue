@@ -41,6 +41,20 @@ export default {
 .social-links a:hover {
   color: #42b983;
 }
+html, body {
+  height: 100%; /* Ensure the height of the page fills the viewport */
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column; /* Stack the content and footer vertically */
+  min-height: 100vh; /* Ensure the container fills the viewport */
+}
+
+.content {
+  flex: 1; /* Push the footer to the bottom when content is short */
+}
 
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 </style>

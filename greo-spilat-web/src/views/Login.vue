@@ -34,17 +34,20 @@
         <Button @click="goToRegister" class="nav-button">Register</Button>
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
   
   <script>
   import apiService from '../services/login.js';
   import Button from 'primevue/button';
+  import Footer from '../components/Footer.vue';
 
   export default {
     name: 'AppLogin',
     components: {
       Button,
+      Footer,
     },
     data() {
       return {

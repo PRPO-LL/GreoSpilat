@@ -35,14 +35,20 @@
         <button @click="goToLogin" class="btn">Go to Login</button>
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import apiService from '../services/login.js';
+import Footer from '../components/Footer.vue';
+
 
 export default {
   name: 'App',
+  components: {
+    Footer,
+  },
   data() {
     return {
       newUser: {

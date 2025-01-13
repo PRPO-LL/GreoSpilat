@@ -3,7 +3,6 @@
   <div id="add">
     <Header/>
     <main class="form-container">
-      <h1>Add New Event</h1>
       <form @submit.prevent="addEvent" class="add-event-form">
         <div class="form-group">
           <label for="title">Event Title</label>
@@ -37,6 +36,16 @@
               required
           />
         </div>
+        <div class="form-group">
+          <label for="date">Date and Time</label>
+          <input
+              id="date"
+              v-model="newEvent.date"
+              type="datetime-local"
+              placeholder="Enter the event date"
+              required
+          />
+        </div>
 
         <div class="form-group">
           <label for="max-participants">Max Participants</label>
@@ -65,21 +74,21 @@
         </div>
       </form>
     </main>
-    <Footer/>
+<!--    <Footer/>-->
   </div>
 </template>
 
 <script>
 import apiService from '../services/events.js';
 import Header from '../components/Header.vue';
-import Footer from '../components/Footer.vue';
+// import Footer from '../components/Footer.vue';
 import {handleError} from "vue";
 
 export default {
   name: 'NewEvent',
   components: {
     Header,
-    Footer,
+    // Footer,
   },
   data() {
     return {
@@ -89,6 +98,7 @@ export default {
         sport: '',
         location: '',
         maxParticipants: null,
+        date: '',
         description: '',
       },
       addEventError: false,
@@ -106,6 +116,7 @@ export default {
                 sport: '',
                 location: '',
                 max_participants: null,
+                date: '',
                 description: '',
               };
             })
@@ -118,6 +129,7 @@ export default {
         this.loginErrorHandler();
       }
     },
+
     loginErrorHandler(){
       this.newUser ={
         title: '',
@@ -151,7 +163,7 @@ export default {
 }
 
 .form-container {
-  margin-top: 50px;
+  margin-top: 60px;
   padding: 20px;
 }
 

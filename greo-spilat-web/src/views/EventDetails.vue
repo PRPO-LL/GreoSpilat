@@ -13,7 +13,10 @@
         <label>Location:</label>
         <p>{{ event.location }}</p>
       </div>
-
+      <div class="details-group">
+        <label>Date and Time:</label>
+      <p> {{ formatDateTime(event.date) }}</p>
+      </div>
       <div class="details-group">
         <label>Capacity:</label>
         <p>{{event.participants}}/{{ event.maxParticipants }}</p>
@@ -25,37 +28,95 @@
       </div>
 
       <button @click="$router.push('/home')" class="back-button">Back to Home</button>
+      <button @click="$router.push('/home')" class="back-button">Join</button>
+
+      <div class="comments-section">
+        <h2>Comments</h2>
+        <div v-if="comments.length === 0" class="comment-placeholder">
+          <p>No comments yet. Be the first to leave one!</p>
+        </div>
+        <div v-else>
+          <div v-for="comment in comments" :key="comment.id" class="comment">
+            <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+          </div>
+        </div>
+
+        <div class="add-comment">
+          <input
+              type="text"
+              v-model="newCommentText"
+              placeholder="Write a comment..."
+              class="comment-input"
+          />
+          <button @click="addComment" class="add-comment-button">Submit</button>
+        </div>
+      </div>
+
     </main>
-    <Footer />
+<!--    <Footer />-->
   </div>
 </template>
 
 
 <script>
 import Header from '../components/Header.vue';
-import Footer from '../components/Footer.vue';
+// import Footer from '../components/Footer.vue';
 import apiService from '../services/events.js';
+import validation from '../services/login.js';
 
 export default {
   name: 'EventDetails',
   components: {
     Header,
-    Footer,
+    // Footer,
   },
   data() {
     return {
       event: {},
+      comments: [], // Array to hold comments
+      newCommentText: '', // Text for the new comment
     };
   },
   created() {
     const eventId = this.$route.params.id; // Get the event ID from the route
     this.getEvent(eventId);
+    this.loadComments(eventId);
   },
   methods: {
     getEvent(eventId) {
       console.log("Ta event" + eventId);
       apiService.getEvent( eventId ).then(response => {
         this.event = response.data; // Load the event details
+      });
+    },
+    loadComments(eventId) {
+      apiService.getComments(eventId).then((response) => {
+        this.comments = response.data;
+      });
+    },
+    async addComment() {
+      if (this.newCommentText.trim() === '') {
+        alert('Comment text cannot be empty.');
+        return;
+      }
+      const newComment = {
+        id: await validation.validate(),
+        content: this.newCommentText.trim(),
+        eventId: this.$route.params.id,
+      };
+      apiService.addComment(newComment);
+      this.newCommentText = ''; // Clear the input field
+      this.$router.go();
+    },
+    formatDateTime(dateTimeString) {
+      const date = new Date(dateTimeString);
+      return date.toLocaleString('sl', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
       });
     },
   },
@@ -117,9 +178,74 @@ h1 {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-right: 20px;
+}
+.back-button:last-child {
+  margin-right: 0;
 }
 
 .back-button:hover {
   background-color: #2a976e;
 }
+
+ .comments-section {
+   margin-top: 30px;
+   text-align: left;
+ }
+
+.comments-section h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.comment-placeholder {
+  padding: 15px;
+  font-size: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  color: #777;
+  text-align: center;
+}
+
+.comment {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.add-comment {
+  display: flex;
+  margin-top: 15px;
+}
+
+.comment-input {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.add-comment-button {
+  background-color: #42b983;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.add-comment-button:hover {
+  background-color: #2a976e;
+}
+
+
 </style>
