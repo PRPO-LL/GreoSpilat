@@ -88,6 +88,18 @@ Maven binary prenesemo iz https://maven.apache.org/download.cgi in sledimo names
 
 #### KumuluzEE
 
+Ogrodje za razvoj mikrostoritev, ki ponuja orodja za delo kot so implementacija JAX-RS (javanska REST implementacija), CDN za upravljanje z odvisnostmi med objekti in JPA za preslikave med objekti in relacijami. Prav tako omogoča preverjanje zdravja storitev, preko kumuluzee-health odvisnosti s katero lahko na ``<app-url>/health/live`` preverjamo zdravje storitev. KumuluzEE vključimo preko odvisnotsi v pom.xml konfiguracijo pa prirejamo v config.yml v posamezni mikrostoritvi. 
+
+#### OpenAPI
+
+Orodje za sprotno dokumentiranje specifikacije, kar v kodi. Javanske funkcije anotiramo s simboli kot so ``@APIResponse`` ali ``@Operation`` , na podlagi cesar lahko kasneje dobimo specfikacijo naši API-jev v .yaml obliki na naslovu posamezne mikrostoritve ``http://localhost:<port-mikrostoritve>/openapi``. To dokumentacijo lahko vkljlučimo v Swagger UI.
+
+#### Swagger
+
+Z nalaganjem yaml opisov REST virov in shem, ki nam jih generira OpenAPI dobimo vizualno reprezentacijo, ki je ena od bolj popularnih in lahkih za uporabo orodij za dokumentacijo API-jev.
+
+
+
 **Mikrostoritve**
 - Uporabniški račun
 - Usvarjanje dogodkov / lastnih pobud za športanje
