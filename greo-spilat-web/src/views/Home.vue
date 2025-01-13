@@ -12,22 +12,70 @@
         />
         <button @click="novEvent()">Create event</button>
       </div>
-      <div class="event-list">
+      <div class="event-list-container">
+        <!-- Tabs -->
+        <div class="tabs">
+          <button
+              :class="{ active: activeTab === 'all' }"
+              @click="setActiveTab('all')">
+            All Events
+          </button>
+          <button
+              :class="{ active: activeTab === 'myEvents' }"
+              @click="setActiveTab('myEvents')">
+            My Events
+          </button>
+          <button
+              :class="{ active: activeTab === 'joinedEvents' }"
+              @click="setActiveTab('joinedEvents')">
+            Joined Events
+          </button>
+        </div>
 
-        <h2 >All events</h2>
-        <div
-            class="event-card clickable-card"
-            v-for="event in events"
-            :key="event.id"
-            @click="goToEvent(event.iid)"
-        >
-          <h3>{{ event.title }}</h3>
-          <p><strong>Sport:</strong> {{ event.sport }}</p>
-          <p><strong>Location:</strong> {{ event.location }}</p>
-          <p><strong>Date:</strong> {{ formatDateTime(event.date) }}</p>
-<!--          <p>{{ event.description }}</p>-->
-<!--          <button @click="joinEvent(event)">Join</button>-->
-<!--          <button @click="deleteEvent(event)">Delete</button>-->
+        <!-- Event List -->
+        <div class="event-list" v-if="activeTab === 'all'">
+          <h2>All Events</h2>
+          <div
+              class="event-card clickable-card"
+              v-for="event in events"
+              :key="event.id"
+              @click="goToEvent(event.iid)"
+          >
+            <h3>{{ event.title }}</h3>
+            <p><strong>Sport:</strong> {{ event.sport }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Date:</strong> {{ formatDateTime(event.date) }}</p>
+          </div>
+        </div>
+
+        <div class="event-list" v-if="activeTab === 'myEvents'">
+          <h2>My Events</h2>
+          <div
+              class="event-card clickable-card"
+              v-for="event in myEvents"
+              :key="event.id"
+              @click="goToEvent(event.iid)"
+          >
+            <h3>{{ event.title }}</h3>
+            <p><strong>Sport:</strong> {{ event.sport }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Date:</strong> {{ formatDateTime(event.date) }}</p>
+          </div>
+        </div>
+
+        <div class="event-list" v-if="activeTab === 'joinedEvents'">
+          <h2>Joined Events</h2>
+          <div
+              class="event-card clickable-card"
+              v-for="event in joinedEvents"
+              :key="event.id"
+              @click="goToEvent(event.iid)"
+          >
+            <h3>{{ event.title }}</h3>
+            <p><strong>Sport:</strong> {{ event.sport }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Date:</strong> {{ formatDateTime(event.date) }}</p>
+          </div>
         </div>
       </div>
     </main>
@@ -40,6 +88,7 @@ import apiService from '../services/events.js';
 import Header from '../components/Header.vue';
 // import Footer from '../components/Footer.vue';
 import {handleError} from "vue";
+import validation from "@/services/login";
 
 export default {
   name: 'AppHome',
@@ -49,22 +98,22 @@ export default {
   },
   data() {
     return {
+      activeTab: 'all', // Default to "All Events"
       events: [],
-      newEvent: {
-        iid: '',
-        title: '',
-        sport: '',
-        location: '',
-        // max_participants: null,
-        description: '',
-      },
+      myEvents: [],
+      joinedEvents: [],
     };
   },
   created() {
     this.getEvents();
+    this.getMyEvents();
+    this.getJoinedEvents();
   },
   methods: {
     handleError,
+    setActiveTab(tab) {
+      this.activeTab = tab; // Set the active tab
+    },
     getEvents(filter = '') {
       apiService
           .getEvents(filter)
@@ -75,20 +124,36 @@ export default {
             console.error("Spodletel poskus filtracije:", error);
           });
     },
-    deleteEvent(event) {
-      console.log('Deleting event:', event);
+    async getMyEvents() {
+      const user = {
+        id: await validation.validate(),
+      };
       apiService
-          .deleteEvent(event)
-          .then(() => {
-            this.getEvents();
+          .getMyEvents(user.id)
+          .then(response => {
+            this.myEvents = response.data;
           })
           .catch(error => {
-            console.error(error);
+            console.error("Spodletel poskus filtracije:", error);
+          });
+    },
+    async getJoinedEvents() {
+      const user = {
+        id: await validation.validate(),
+      };
+      apiService.getJoinedEvents(user.id)
+          .then(response => {
+            this.joinedEvents = response.data.map(item => {
+              return item.event;
+            });
+          })
+          .catch(error => {
+            console.error("Spodletel poskus my events:", error);
           });
     },
     goToEvent(eventId) {
       // console.log("Ta event" + eventId);
-      this.$router.push(`/event/${eventId}`); // Navigate to the event details page
+      this.$router.push(`/event/${eventId}`);
     },
     formatDateTime(dateTimeString) {
       const date = new Date(dateTimeString);
@@ -252,4 +317,97 @@ header {
 .event-card button:hover {
   background-color: #AFE1AF;
 }
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tabs button:hover {
+  background-color: #e0f3e0;
+}
+
+.tabs button.active {
+  background-color: #42b983;
+  color: white;
+  border-color: #42b983;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.event-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.event-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tabs button:hover {
+  background-color: #e0f3e0;
+}
+
+.tabs button.active {
+  background-color: #42b983;
+  color: white;
+  border-color: #42b983;
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.event-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.event-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
 </style>

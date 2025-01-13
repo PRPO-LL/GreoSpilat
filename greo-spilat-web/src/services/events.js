@@ -14,10 +14,24 @@ const apiClientComment = axios.create({
     },
 });
 
+const apiClientJoin = axios.create({
+    baseURL: 'http://localhost:8403/v1/join',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
 export default {
     getEvents(filter = '') {
         // const url = filter ? `?(filter=title:LIKE:'%${filter}%' OR filter=sport:LIKE:'%${filter}%' OR filter=location:LIKE:'%${filter}%')` : '';
         const url = filter ? `?filter=title:LIKE:'%${filter}%'` : '/';
+        return apiClient.get(url);
+    },
+    getJoinedEvents(eventId){
+        return apiClientJoin.get('/user/' + eventId);
+    },
+    getMyEvents(userId){
+        const url = userId ? `?filter=creator_id:EQ:${userId}` : '/';
         return apiClient.get(url);
     },
     // http://localhost:{{portEvent}}/v1/events?filter=title:LIKE:'%lom%'
