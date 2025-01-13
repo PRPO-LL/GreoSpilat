@@ -1,23 +1,25 @@
-### TODO
 
-- [x] Create a database
-- [x] Implement entity and persistance modules for userEvents
-- [ ] DTO for transfering User via user_id to the database
-- [ ] Communication via API with the Event microservice
-- [ ] test
-
-## Greo spilat ##
+## GreoSpilat App ##
 
 *Luka Kalšek, Luka Bele*, Luka^2
 *skupina 10*
 
-Aplikacija, ki omogoča mreženje med uporabniki z namenom skupnega športanja. 
-Uporabna za timske športe kot so košarka, nogomet, odbojka, pa tudi individualne kot so tek, plavanje, plezanje,... saj je vse slajše v družbi. 
+👦🏼: "A maš še koga za basket?"
 
-Vsak uporabnik ima svoj profil, preko katerega lahko objavlja pozive za športanje in izrazi pripravljenost za udeležbo ob določenih terminih, na kar se lahko odzovejo drugi. Poleg tega lahko ustvarja tudi športne dogodke, na katere se drugi uporabniki prijavijo in pridružijo, kar omogoča enostavno organizacijo skupnih aktivnosti.
+👦🏽: "Nimam, lahko pa pogledava na GreoSpilat."
 
-**Primeri uporabe**
+👦🏼: "GreoSpilat?"
 
+GreoSpilat. Aplikacija, ki druženje iz socialnih omrežij vrne pred bloke, na vaška igrišča ali na mestne tekaške steze. Povezuje ljudi, ki jim do svoje športne aktivnosti manjka nekaj igralcev, žoga ali pa motivacija družbe. Namenjena rekreaciji, skupnim treningom ali pa spoznavanju novih ljudi. Preprosto ustvari dogodek, za katerega ti manjka še kakšen igralec, ali pa poglej kaj je na voljo in se pridruži zanimivi aktivnosti. Ko se dogodek zapolni z udeleženci boš o tem obveščen/a in že si lahko na poti na svoj prvi padel! Ne čakaj, GreoSpilat!
+
+**Kazalo**
+
+**Uvod**
+
+Namen projkta je ustvariti aplikacijo, ki vključuje sodobne tehnologije in prakse v razvoju programske opreme s poudarkom na mikrostoritveni arhitekturi, izpostavljanju RESTful APIjev, pakiranje slik mikrostoritev v vsebnike in stroke, uporabi orodja za orkestracijo in nameščanju le tega v oblak. Cilj je, da se pri razvoju spoznava z novimi tehnologijami in praksami in da končni izdelek (aplikacija) podpira najpogostejše primere uporabe za tip aplikacije, ki jo razvijava. Bodoči uporabnik bo skozi uporabniški vmesnik uporabljal aplikacijo, ki bo z uporabo prej omenjenenih tehnologij in skaliranja zagotavljala prijetno uporabniško izkušnjo. Motivacija za temo je predstavljna na začetku tega dokumenta in je zelo intuitivna, saj sva pri ideji izhajala iz najinih lastnih potreb. Ta aplikacija "rešuje problem", ki je na trenutnem trgu še precej nerešen, oziroma za to ne obstaja zelo očiten ponudnik kot na marsikaterem drugem področju. Primerna je za tako stare in mlade, bolj ali manj aktivne, hkrati pa spodbuja pravo socializacijo in fizkulturo.
+
+**Arhitektura aplikacije**
+![arhitektura](arhitektura_spil.png)
 - **Ustvarjanje športnih dogodkov**: Uporabniki lahko ustvarijo dogodke, kot so "3-na-3 košarka" ali "pohod na Donačko goro," na katere se lahko prijavijo drugi člani.
 
 - **Pozivi za športanje**: Uporabniki lahko objavijo svoje termine za športanje, da jih drugi povabijo v ekipo ali na dogodek.
