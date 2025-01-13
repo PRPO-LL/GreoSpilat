@@ -1,5 +1,5 @@
 
-## GreoSpilat App ##
+# GreoSpilat App 
 
 *Luka Kalšek, Luka Bele*, Luka^2
 *skupina 10*
@@ -12,23 +12,81 @@
 
 GreoSpilat. Aplikacija, ki druženje iz socialnih omrežij vrne pred bloke, na vaška igrišča ali na mestne tekaške steze. Povezuje ljudi, ki jim do svoje športne aktivnosti manjka nekaj igralcev, žoga ali pa motivacija družbe. Namenjena rekreaciji, skupnim treningom ali pa spoznavanju novih ljudi. Preprosto ustvari dogodek, za katerega ti manjka še kakšen igralec, ali pa poglej kaj je na voljo in se pridruži zanimivi aktivnosti. Ko se dogodek zapolni z udeleženci boš o tem obveščen/a in že si lahko na poti na svoj prvi padel! Ne čakaj, GreoSpilat!
 
-**Kazalo**
+## Kazalo
 
-**Uvod**
+## Uvod
 
 Namen projkta je ustvariti aplikacijo, ki vključuje sodobne tehnologije in prakse v razvoju programske opreme s poudarkom na mikrostoritveni arhitekturi, izpostavljanju RESTful APIjev, pakiranje slik mikrostoritev v vsebnike in stroke, uporabi orodja za orkestracijo in nameščanju le tega v oblak. Cilj je, da se pri razvoju spoznava z novimi tehnologijami in praksami in da končni izdelek (aplikacija) podpira najpogostejše primere uporabe za tip aplikacije, ki jo razvijava. Bodoči uporabnik bo skozi uporabniški vmesnik uporabljal aplikacijo, ki bo z uporabo prej omenjenenih tehnologij in skaliranja zagotavljala prijetno uporabniško izkušnjo. Motivacija za temo je predstavljna na začetku tega dokumenta in je zelo intuitivna, saj sva pri ideji izhajala iz najinih lastnih potreb. Ta aplikacija "rešuje problem", ki je na trenutnem trgu še precej nerešen, oziroma za to ne obstaja zelo očiten ponudnik kot na marsikaterem drugem področju. Primerna je za tako stare in mlade, bolj ali manj aktivne, hkrati pa spodbuja pravo socializacijo in fizkulturo.
 
-**Arhitektura aplikacije**
-![arhitektura](arhitektura_spil.png)
-- **Ustvarjanje športnih dogodkov**: Uporabniki lahko ustvarijo dogodke, kot so "3-na-3 košarka" ali "pohod na Donačko goro," na katere se lahko prijavijo drugi člani.
+## Arhitektura aplikacije
 
-- **Pozivi za športanje**: Uporabniki lahko objavijo svoje termine za športanje, da jih drugi povabijo v ekipo ali na dogodek.
+Spodnja slika prikazuje glavne komponente in interakcije med njimi.
 
-- **Zemljevid dogodkov**: Aplikacija ponuja zemljevid, kjer so prikazani vsi prihajajoči športni dogodki v bližini, kar omogoča lažje iskanje lokalnih aktivnosti.
+- Vue.js komponenta predstavlja uporabniški vmesnik s pogledi kateri je vstopna točka za komunikacijo z zalednim delom.
 
-- **Nastavitve športnih preferenc**: Uporabniki lahko nastavijo svoje športne preference in določijo, za katere športe želijo prejemati povabila ter obvestila, kar zagotavlja bolj personalizirano izkušnjo.
+- Zaledni del predstavljajo mikrostoritve, ki se naprej delijo na API, poslovno logijo, in persistenčno plast za komunikacijo s persistenčnim nivojem.
 
-Aplikacija poenostavi organizacijo in povezovanje športnih navdušencev ter ustvarja skupnost, kjer se lahko uporabniki srečujejo in rekreirajo skupaj.
+- Persistenčno plast predstavlja PostgreSQL podatkovna baza z relacijami za vsako od mikrostoritev, ki so med sabo smiselno povezane
+
+- 🟧 Oranžne povezave: Predstavljajo HTTP klice iz uporabniškega vmesnika na REST vire mikrostoritev
+
+- 🟩 Zelene povezave: Predstavljajo HTTP klice iz mikrostoritve na API druge mikrostoritve
+
+- 🟦 Modre povezave: predstavljajo 
+
+![arhitektura](slike/shema.png)
+
+### Uporabljene tehnologije
+
+#### Maven
+
+Orodje za avtomatizacijo gradnje javanskih projektov. Skrbi za odvisnosti definirane v parent pom.xml, ki je v glanem direktoriju projekta in jih iz Maven Central repozitorija prenese v naš lokalni repozitorij in jih oporabi pri gradnji projekta. pom.xml datoteko ima tudi vsaka mikrostoritev v svojem direktoriju, prav tako pa vsaka njena komponenta (api, bizLogic, persistance). Maven uporablja enotne sheme projekta, ki da delijo na vire src/ in target/ kej konča zgrajena verzija. Primer strukture za MS user:
+
+    .
+    ├── Dockerfile  
+
+    ├── pom.xml   
+
+    ├── users-api  
+
+    │   ├── pom.xml  
+
+    │   ├── src  
+
+    │   │   └── main  
+
+    │   └── target  
+    
+            └── users-api-1.0.0-SNAPSHOT.jar
+
+    ├── users-bizLogic  
+
+    │   ├── pom.xml  
+
+    │   ├── src  
+
+    │   │   └── main  
+
+    │   └── target  
+
+            └── users-bizLogic-1.0.0-SNAPSHOT.jar
+
+    └── users-persistance 
+
+        ├── pom.xml  
+    
+        ├── src  
+    
+        │   └── main  
+    
+        └── target  
+    
+            └── users-persistance-1.0.0-SNAPSHOT.jar
+    
+
+Maven binary prenesemo iz https://maven.apache.org/download.cgi in sledimo namestitvi. Po spremembah projekt zgradimo z  ``mvn clean install``.
+
+#### KumuluzEE
 
 **Mikrostoritve**
 - Uporabniški račun
