@@ -114,20 +114,24 @@ Mikrostoritev je namenjena avtentikaciji in avtorizaciji uporabnika. Uporablja s
 za registracijo uporabnika, hrani šifrirana gesla in uporabniška imena. Ob prijavi
 generira tudi JWT žetone, ki jih druge mikrostoritve uporabljajo za avtorizacijo
 in avtentikacijo. Vsebuje tudi konˇcne toˇcke za avtentikacijo JWT žetonov.
+
 ##### Users
 Mikrostoritev je namenjena upravljanju uporabnikov. Uporabniki lahko spre-
 minjajo svoj raˇcun ali pa izbrišejo profil. Povezana je z mikrostoritvijami join,
 event, comments in notifications.
+
 ##### Events
 Mikrostoritev je namenjena upravljanju dogodkov, ustvarjanju, spreminjanju in
 brisanju dogodkov. Kakor mikrostoritev user, je tudi events povezana z vsemi
 ostalimi mikrostoritvami.
+
 ##### Notifications
 Naloga Notifications je ustvarjanje in opravljanje z obvestili, s klicem POST
 post izpostav ustvarjamo obvestila, ki se persistirajo v podatkovno bazo za na-
 men nadaljne obdelave. Poleg vsebine obvestila hranimo tudi njegov status.
 GET izpostave vraˇcajo toˇcno doloˇceno obvestilo ali vsa obvestila namenjena
 doloˇcenemu uporabniku.
+
 ##### Comments
 S komentarji upravlja storitev Comments. Komentar je z relacijo ManyToOne
 veže uporabnika in dogodek preko njunih id-jev, lahko pa tudi drug komentar
@@ -135,6 +139,7 @@ z rekurzivno referenco na comment_id, s tem je podprta funkcionalnost replik
 na komentar. Poleg ustvarjanja komentarjev in replik, brisanja in vraˇcanja
 komentarjev glede na uporabnika ali dogodek ena od izpostav omogoˇca tudi
 všeˇckanje komentarjev.
+
 ##### Join
 Join upravlja z razmerjem many-to-many med uporabniki in dogodki, ki se
 preslika v podatkovno bazo joins s tujim kljuˇcem iz vsake strani. Opravlja pri-
@@ -151,14 +156,15 @@ framework za gradnjo uporabniških vmesnikov. Za realizacijo Kubernetes clustra
 na lokalnem okolju sma uporabila orodje kind.
 
 #### Knjižnjice in mehanizmi
-• Axios→ naslavljanje HTTP zahtevkov na zaledje.
-• JWT→ uporabljen za avtentikacijo in avtorizacijo uporabnikov.
-• Password4j→ uporabljen za enkripcijo in verifikacijo gesel
-• JPA→ upravljanje relacijskih podatkov z objekti.
-• CORS filtri→ omogoˇcanje pošiljanja HTTP zahtevkov ˇcez razliˇcne domene
+- Axios→ naslavljanje HTTP zahtevkov na zaledje.
+- JWT→ uporabljen za avtentikacijo in avtorizacijo uporabnikov.
+- Password4j→ uporabljen za enkripcijo in verifikacijo gesel
+- JPA→ upravljanje relacijskih podatkov z objekti.
+- CORS filtri→ omogoˇcanje pošiljanja HTTP zahtevkov ˇcez razliˇcne domene
+  
 #### Razvojna okolja in orodja
-• IntelliJ IDEA→ razvojno okolje.
-• Postman→ orodje za testiranje REST API zahtevkov
-• GitHub→ orodje za nadzor razliˇcic in upravljanje z repozitoriji.
+- IntelliJ IDEA→ razvojno okolje.
+- Postman→ orodje za testiranje REST API zahtevkov
+- GitHub→ orodje za nadzor razliˇcic in upravljanje z repozitoriji.
 
 
