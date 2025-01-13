@@ -74,8 +74,14 @@ export default {
             content: comment.content,
         })
     },
-    joinEvent(){
-        //logika za join event
+    joinEvent(eventid, user){
+        return apiClientJoin.post('?userId='+user.id+'&eventId='+eventid)
+    },
+    leaveEvent(eventid, user) {
+        return apiClientJoin.delete('/'+user.id+'/event/'+eventid)
+    },
+    amIJoined(userId){
+        return apiClientJoin.get('/user/' + userId.id);
     },
     getEvent(event){
         return apiClient.get('/' + event);

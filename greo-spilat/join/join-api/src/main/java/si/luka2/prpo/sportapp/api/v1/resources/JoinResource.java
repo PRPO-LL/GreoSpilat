@@ -101,7 +101,7 @@ public class JoinResource {
         }
 
         List<Joins> joins = joinBean.getJoinsByEvent(eventId);
-        if (joins == null || joins.isEmpty()) {
+        if (joins == null) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity("No users have joined the event.")
                     .build();
@@ -135,7 +135,7 @@ public class JoinResource {
         }
 
         List<Joins> joins = joinBean.getJoinsByUser(userId);
-        if (joins == null || joins.isEmpty()) {
+        if (joins == null) {
             return Response.status(Response.Status.NO_CONTENT)
                     .entity("User has not joined any events.")
                     .build();

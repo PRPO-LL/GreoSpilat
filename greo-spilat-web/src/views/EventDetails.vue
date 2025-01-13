@@ -28,7 +28,8 @@
       </div>
 
       <button @click="$router.push('/home')" class="back-button">Back to Home</button>
-      <button @click="$router.push('/home')" class="back-button">Join</button>
+      <button v-if="!isJoined && !creator" @click="joinEvent()" class="back-button">Join</button>
+      <button v-if="isJoined && !creator" @click="leaveEvent()" class="leave-button">Leave</button>
 
       <div class="comments-section">
         <h2>Comments</h2>
@@ -73,14 +74,19 @@ export default {
   data() {
     return {
       event: {},
-      comments: [], // Array to hold comments
-      newCommentText: '', // Text for the new comment
+      comments: [],
+      newCommentText: '',
+      isJoined: false,
+      creator: false,
     };
   },
-  created() {
+  async created() {
     const eventId = this.$route.params.id; // Get the event ID from the route
-    this.getEvent(eventId);
+    await this.getEvent(eventId);
     this.loadComments(eventId);
+    // this.isJoined = this.amIJoined();
+    this.isJoined = await this.amIJoined();
+    this.creator = await this.semCreator();
   },
   methods: {
     getEvent(eventId) {
@@ -107,6 +113,41 @@ export default {
       apiService.addComment(newComment);
       this.newCommentText = ''; // Clear the input field
       this.$router.go();
+    },
+    async joinEvent() {
+      const user = {
+        id: await validation.validate(),
+      };
+      apiService.joinEvent(this.$route.params.id, user);
+      this.$router.go();
+    },
+    async leaveEvent() {
+      const user = {
+        id: await validation.validate(),
+      };
+      apiService.leaveEvent(this.$route.params.id, user);
+      this.$router.go();
+    },
+    async amIJoined() {
+      const user = {
+        id: await validation.validate(),
+      };
+      const response = await apiService.amIJoined(user);
+      const smJoinan = response.data.some(join => {
+        return join.event.iid === parseInt(this.$route.params.id, 10);
+      });
+      // console.log("sm joinan; " + smJoinan);
+      // console.log('this.event.creatorId:', this.event.creatorId, typeof(this.event.creatorId));
+      // console.log('user id', parseInt(user.id, 10), typeof(parseInt(user.id, 10)));
+      // console.log('creatorId comparison:', this.event.creatorId === parseInt(user.id, 10));
+      // console.log('smJoinan || comparison:', smJoinan);
+      return smJoinan;
+    },
+    async semCreator(){
+      const user = {
+        id: await validation.validate(),
+      };
+      return this.event.creatorId === parseInt(user.id, 10);
     },
     formatDateTime(dateTimeString) {
       const date = new Date(dateTimeString);
@@ -186,6 +227,26 @@ h1 {
 
 .back-button:hover {
   background-color: #2a976e;
+}
+
+.leave-button {
+  margin-top: 20px;
+  background-color: #ea0a0a;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 20px;
+}
+.leave-button:last-child {
+  margin-right: 0;
+}
+
+.leave-button:hover {
+  background-color: #cd1c1c;
 }
 
  .comments-section {

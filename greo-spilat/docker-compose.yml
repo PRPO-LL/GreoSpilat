@@ -61,7 +61,7 @@ services:
       context: ./notifications
       dockerfile: Dockerfile
     image: greo-spilat/notifications-service:1.0
-    container_name: notifications-service
+    container_name: notification-service
     restart: always
     ports:
       - "8401:8401"
@@ -75,7 +75,7 @@ services:
       context: ./comments
       dockerfile: Dockerfile
     image: greo-spilat/comments-service:1.0
-    container_name: comments-service
+    container_name: comment-service
     restart: always
     ports:
       - "8402:8402"

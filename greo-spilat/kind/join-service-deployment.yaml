@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: join-service
+  name: join-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: join-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: join-service
+    spec:
+      containers:
+        - name: join-service
+          image: lukaexmedicinec/prpo-ll:join-service
+          ports:
+            - containerPort: 8403
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8403
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8403
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      restartPolicy: Always
