@@ -33,9 +33,6 @@
             rounded
         />
       </nav>
-
-      <!-- Right Spacer to Center Buttons -->
-      <div class="right-spacer"></div>
     </div>
   </header>
 </template>
@@ -75,14 +72,14 @@ export default {
   left: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; /* Use Flexbox for alignment */
 }
 
 .header-container {
-  display: flex;
-  align-items: center;
-  justify-content:  right;
   max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
   padding: 10px 20px;
   height: 60px;
 }
@@ -90,16 +87,15 @@ export default {
 .logo {
   font-size: 24px;
   font-weight: bold;
+  margin-right: auto;
   color: #333;
-  flex: 1;
 }
 
 .nav-buttons {
   display: flex;
   gap: 15px;
-  flex: 1;
   justify-content: center;
-
+  flex: 1;
 }
 
 .nav-button {

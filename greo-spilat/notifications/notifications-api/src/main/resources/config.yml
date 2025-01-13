@@ -18,13 +18,6 @@ kumuluzee:
       si.luka2.prpo.sportapp.beans.NotificationBean: DEBUG
   rest-client:
     registrations:
-      - class: users-api
+      - class: notifications-api
         url: http://notifications-service:8401/v1
         read-timeout: 5000
-  integrations:
-    authentication:
-      base-url: http://auth-service:8085/v1
-    events:
-      base-url: http://event-service:8083/v1
-    users:
-      base-url: http://user-service:8084/v1

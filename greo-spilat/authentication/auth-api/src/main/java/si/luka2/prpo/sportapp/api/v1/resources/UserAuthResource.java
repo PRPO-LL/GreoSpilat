@@ -25,10 +25,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
@@ -54,7 +51,11 @@ public class UserAuthResource {
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+            description = "Uporabniki niso bili najdeni"
+    )
+    })
     @RolesAllowed("user")
     @GET
     @Path("all")
@@ -73,7 +74,12 @@ public class UserAuthResource {
             @APIResponse(responseCode = "200",
                     description = "En uporabnik",
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+                    description = "Uporabnik ni bil najden"
+            )
+
+    })
     @RolesAllowed("user")
     @GET
     @Path("{username}")
@@ -158,7 +164,11 @@ public class UserAuthResource {
             @APIResponse(responseCode = "200",
                     description = "login",
                     content = @Content(schema = @Schema(implementation = UserAuth.class, type = SchemaType.OBJECT))
-            )})
+            ),
+            @APIResponse(responseCode = "404",
+                description = "Spodletel poskus logiranja uporabnika"
+            )
+    })
     @RolesAllowed("user")
     @POST
     @Path("/login")
@@ -180,14 +190,15 @@ public class UserAuthResource {
     @APIResponses({
             @APIResponse(description = "Uporabnik uspešno izbrisan",
                     responseCode = "204"),
-            @APIResponse(responseCode = "400",
-                    description = "Napaka pri brisanju uporabnika")
+            @APIResponse(responseCode = "404",
+                    description = "Spodletel poskus brisanja uporabnika")
 
     })
     @RolesAllowed("user")
     @DELETE
     @Path("/delete")
-    public Response deleteUser(RegisterUserDTO user) {
+    public Response deleteUser(@Context HttpHeaders headers,RegisterUserDTO user) {
+        String header = headers.getHeaderString("Authorization");
         httpClient = HttpClientBuilder.create().build();
         basePath = "http://user-service:8084/v1/";
         // inicializacija virov
@@ -195,10 +206,10 @@ public class UserAuthResource {
         UserAuth userAuth = userAuthBean.getUser(user.getUsername());
         try{
             HttpDelete httpDelete = new HttpDelete(basePath + "users/delete/" + userAuth.getId());
+            httpDelete.addHeader("Authorization", header);
             HttpResponse httpResponse = httpClient.executeOpen(null, httpDelete, null);
 
             int status = httpResponse.getCode();
-
             if(status == 204){
                 if(userAuthBean.deleteUser(user))
                     return Response.noContent().build();
@@ -223,5 +234,39 @@ public class UserAuthResource {
             throw new InternalServerErrorException(e);
         }
     }
+    @Operation(description = "Validacija tokena", summary = "validacija")
+    @APIResponses({
+            @APIResponse(description = "Token je validen",
+                    responseCode = "200"),
+            @APIResponse(description = "Auth header manjka",
+                    responseCode = "400"),
+            @APIResponse(description = "Token je potekel",
+                    responseCode = "401"),
+
+    })
+    @RolesAllowed("user")
+    @POST
+    @Path("/validate")
+    public Response validateToken(@Context HttpHeaders headers) {
+        String header = headers.getHeaderString("Authorization");
+        if(header == null){
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Auth header manjka")
+                    .build();
+        }
+        int id = JwtService.validateToken(header);
+        if(id < 0){
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Token je potekel")
+                    .build();
+        }
+        else{
+            Response.ResponseBuilder builder = Response.ok("Token je validen");
+            builder.header("Id", id);
+            builder.header("Authorization", header);
+            return builder.build();
+        }
+    }
+
 
 }

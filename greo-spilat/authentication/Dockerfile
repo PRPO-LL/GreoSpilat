@@ -13,3 +13,5 @@ ENTRYPOINT ["java", "-jar", "auth-api-1.0.0-SNAPSHOT.jar"]
 
 
 CMD ["java", "-jar", "auth-api-1.0.0-SNAPSHOT.jar"]
+
+

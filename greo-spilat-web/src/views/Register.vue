@@ -27,7 +27,7 @@
         <div v-if="registerError" class="error-message">
           Username already exists, please try again.
         </div>
-        <button type="submit" class="btn">register</button>
+        <button type="submit" class="btn">Register</button>
       </form>
 
       <div v-else class="success-message">
@@ -35,14 +35,20 @@
         <button @click="goToLogin" class="btn">Go to Login</button>
       </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
 <script>
 import apiService from '../services/login.js';
+import Footer from '../components/Footer.vue';
+
 
 export default {
   name: 'App',
+  components: {
+    Footer,
+  },
   data() {
     return {
       newUser: {

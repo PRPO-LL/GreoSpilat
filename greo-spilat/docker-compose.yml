@@ -22,16 +22,6 @@ services:
     restart: always
     ports:
       - "8085:8085"
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=events_users
-      - DB_USERNAME=luka
-      - DB_PASSWORD=luka
-      - AUTH_API_URL=http://auth-service:8085/v1
-      - USERS_SERVICE_URL=http://user-service:8084/v1
-      - EVENTS_SERVICE_URL=http://event-service:8083/v1
-      - NOTIFICATIONS_SERVICE_URL=http://notifications-service:8401/v1
     #    networks:
     #      - app-network
     depends_on:
@@ -46,17 +36,6 @@ services:
     restart: always
     ports:
       - "8084:8084"
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=events_users
-      - DB_USERNAME=luka
-      - DB_PASSWORD=luka
-      - AUTH_API_URL=http://auth-service:8085/v1
-      - USERS_SERVICE_URL=http://user-service:8084/v1
-      - EVENTS_SERVICE_URL=http://event-service:8083/v1
-      - NOTIFICATIONS_SERVICE_URL=http://notifications-service:8401/v1
-
     #    networks:
     #      - app-network
     depends_on:
@@ -72,17 +51,6 @@ services:
     restart: always
     ports:
       - "8083:8083"
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=events_users
-      - DB_USERNAME=luka
-      - DB_PASSWORD=luka
-      - AUTH_API_URL=http://auth-service:8085/v1
-      - USERS_SERVICE_URL=http://user-service:8084/v1
-      - EVENTS_SERVICE_URL=http://event-service:8083/v1
-      - NOTIFICATIONS_SERVICE_URL=http://notifications-service:8401/v1
-
     #    networks:
     #      - app-network
     depends_on:
@@ -93,20 +61,38 @@ services:
       context: ./notifications
       dockerfile: Dockerfile
     image: greo-spilat/notifications-service:1.0
-    container_name: notifications-service
+    container_name: notification-service
     restart: always
     ports:
       - "8401:8401"
-    environment:
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_NAME=events_users
-      - DB_USERNAME=luka
-      - DB_PASSWORD=luka
-      - AUTH_API_URL=http://auth-service:8085/v1
-      - USERS_SERVICE_URL=http://user-service:8084/v1
-      - EVENTS_SERVICE_URL=http://event-service:8083/v1
-      - NOTIFICATIONS_SERVICE_URL=http://notifications-service:8401/v1
+    #    networks:
+    #      - app-network
+    depends_on:
+      - postgres
+
+  comments-service:
+    build:
+      context: ./comments
+      dockerfile: Dockerfile
+    image: greo-spilat/comments-service:1.0
+    container_name: comment-service
+    restart: always
+    ports:
+      - "8402:8402"
+    #    networks:
+    #      - app-network
+    depends_on:
+      - postgres
+
+  join-service:
+    build:
+      context: ./join
+      dockerfile: Dockerfile
+    image: greo-spilat/join-service:1.0
+    container_name: join-service
+    restart: always
+    ports:
+      - "8403:8403"
     #    networks:
     #      - app-network
     depends_on:

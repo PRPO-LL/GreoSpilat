@@ -30,7 +30,7 @@ public class JPAServlet extends HttpServlet {
 
         Long countEventov = eventsBean.getEventsCount(null);
 
-        List<Event> events = eventsBean.getEvents();
+        List<Event> events = eventsBean.getEvents(null);
 
 
         // Display the user count and list each user's details

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="joins-jpa" transaction-type="JTA">
+        <jta-data-source>jdbc/sportappDS</jta-data-source>
+
+        <class>si.luka2.prpo.sportapp.entities.Joins</class>
+        <class>si.luka2.prpo.sportapp.entities.Event</class>
+        <class>si.luka2.prpo.sportapp.entities.User</class>
+
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="none"/>
+        </properties>
+    </persistence-unit>
+</persistence>

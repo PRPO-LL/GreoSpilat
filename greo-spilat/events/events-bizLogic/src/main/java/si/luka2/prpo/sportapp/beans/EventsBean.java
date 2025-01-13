@@ -1,6 +1,7 @@
 package si.luka2.prpo.sportapp.beans;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import si.luka2.prpo.sportapp.entities.Event;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -40,9 +42,10 @@ public class EventsBean {
         TypedQuery<Long> q = em.createQuery(strng.toString(), Long.class);
         return q.getSingleResult();
     }
-    public List<Event> getEvents() {
-        return em.createNamedQuery("Event.getAll", Event.class).getResultList();
+    public List<Event> getEvents(QueryParameters query) {
+        return JPAUtils.queryEntities(em, Event.class, query);
     }
+
 
 
     public Event getEvent(int eventId) {
@@ -94,4 +97,34 @@ public class EventsBean {
         log.info("Event not found");
         return false;
     }
+
+    @Transactional
+    public boolean incrementParticipants(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        if (event == null) {
+            return false;
+        }
+
+        if (event.getParticipants() >= event.getMaxParticipants()) {
+            throw new IllegalArgumentException("Maximum participants limit reached for this event.");
+        }
+
+        event.setParticipants(event.getParticipants() + 1);
+        em.merge(event);
+        return true;
+    }
+
+
+    @Transactional
+    public boolean decrementParticipants(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        if (event == null || event.getParticipants() <= 0) {
+            return false; // Prevent negative participant count
+        }
+
+        event.setParticipants(event.getParticipants() - 1);
+        em.merge(event);
+        return true;
+    }
+
 }

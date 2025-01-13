@@ -1,9 +1,5 @@
-#group "default" {
-#  targets = ["auth-service", "user-service","event-service","frontend-service"]
-#}
-
 group "default" {
-  targets = ["notification-service"]
+  targets = ["auth-service", "user-service","event-service","frontend-service","notification-service", "join-service", "comment-service"]
 }
 
 target "auth-service" {
@@ -31,7 +27,7 @@ target "notification-service" {
   context    = "./notifications"
   dockerfile = "Dockerfile"
   platforms  = ["linux/amd64", "linux/arm64"]
-  tags       = ["lukaexmedicinec/prpo-ll:notifications-service"]
+  tags       = ["lukaexmedicinec/prpo-ll:notification-service"]
 }
 
 target "frontend-service" {
@@ -39,4 +35,16 @@ target "frontend-service" {
   dockerfile = "Dockerfile"
   platforms  = ["linux/amd64", "linux/arm64"]
   tags       = ["lukaexmedicinec/prpo-ll:frontend-service"]
+}
+target "comment-service" {
+  context    = "./comments"
+  dockerfile = "Dockerfile"
+  platforms  = ["linux/amd64", "linux/arm64"]
+  tags       = ["lukaexmedicinec/prpo-ll:comment-service"]
+}
+target "join-service" {
+  context    = "./join"
+  dockerfile = "Dockerfile"
+  platforms  = ["linux/amd64", "linux/arm64"]
+  tags       = ["lukaexmedicinec/prpo-ll:join-service"]
 }

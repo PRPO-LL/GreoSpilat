@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 //import com.kumuluz.ee.rest.utils.JPAUtils;
 
+import com.kumuluz.ee.rest.utils.JPAUtils;
 import si.luka2.prpo.sportapp.entities.User;
 
 @ApplicationScoped
@@ -36,9 +37,10 @@ public class UserBean {
     private EntityManager em; //za interakcijo z databazo!!!
 
     //funkcionalnost za komunikacijo s databazo
-    public List<User> getUsers() {
+    public List<User> getUsers(QueryParameters query) {
 
-        return em.createNamedQuery("User.getAll", User.class).getResultList();
+//        return em.createNamedQuery("User.getAll", User.class).getResultList();
+        return JPAUtils.queryEntities(em, User.class, query);
     }
 
 

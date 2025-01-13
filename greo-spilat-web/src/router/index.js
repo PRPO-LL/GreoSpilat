@@ -4,6 +4,8 @@ import LoginPage from '../views/Login.vue'
 // import Register from '../views/Register.vue'
 import HomePage from '../views/Home.vue'
 import RegisterPage from '../views/Register.vue'
+import NewEventPage from '../views/NewEvent.vue'
+import EventDetailsPage from '../views/EventDetails.vue'
 
 const routes = [
     {
@@ -24,6 +26,16 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: HomePage,
+    },
+    {
+        path: '/newEvent',
+        name: 'NewEvent',
+        component: NewEventPage,
+    },
+    {
+        path: '/event/:id',
+        name: 'EventDetails',
+        component: EventDetailsPage,
     },
 ];
 

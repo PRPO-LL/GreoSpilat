@@ -5,12 +5,6 @@ kumuluzee:
   version: 1.0.0
   env:
     name: dev
-#  datasources:
-#    - jndi-name: jdbc/sportappDS
-#      connection-url: jdbc:postgresql://localhost:5432/events_users
-#      username: luka
-#      password: luka
-#      max-pool-size: 20
   datasources:
     - jndi-name: jdbc/sportappDS
 #      connection-url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -32,43 +26,3 @@ kumuluzee:
       - class: users-api
         url: http://user-service:8084/v1
         read-timeout: 5000
-integrations:
-  authentication:
-    base-url: http://auth-service:8085/v1
-  events:
-    base-url: http://event-service:8083/v1
-  notifications:
-    base-url: http://notifications-service:8401/v1
-
-
-#kumuluzee:
-#  name: users
-#  version: 1.0.0
-#  env:
-#    name: dev
-#  datasources:
-#    - jndi-name: jdbc/sportappDS
-#      #connection-url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-#      connection-url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
-#      username: ${DB_USERNAME}
-#      password: ${DB_PASSWORD}
-#      max-pool-size: 20
-#
-#  server:
-#    http:
-#      port: ${USER_SERVICE_PORT}
-#  #  health:
-#  #    checks:
-#  #      data-source-health-check:
-#  #        type: liveness
-#  #        jndi-name: jdbc/sport-appDS
-#  rest-client:
-#    registrations:
-#      - class: users-api
-#        url: ${USER_API_URL}
-#        read-timeout: 5000
-#integrations:
-#  authentication:
-#    base-url: ${AUTH_API_URL}
-#  events:
-#    base-url: ${EVENTS_API_URL}

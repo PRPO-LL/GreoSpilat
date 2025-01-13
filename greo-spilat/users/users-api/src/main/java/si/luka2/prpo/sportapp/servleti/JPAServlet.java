@@ -36,7 +36,7 @@ public class JPAServlet extends HttpServlet {
 
         Long countUporabnikov = userBean.getUserCount(null);
 
-        List<User> users = userBean.getUsers();
+        List<User> users = userBean.getUsers(null);
 
 
         // Display the user count and list each user's details
