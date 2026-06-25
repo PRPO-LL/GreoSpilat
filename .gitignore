@@ -21,3 +21,10 @@ target/
 *.tmp
 
 Zapiski\ PRPO.md
+
+# Local planning / working docs — kept out of the shared repo
+CLAUDE.md
+docs/
+
+# Secrets / local env — never track (use .env.example as the template)
+.env
