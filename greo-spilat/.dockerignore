@@ -1,0 +1,21 @@
+# Build output — we compile fresh inside the image
+**/target/
+
+# IDE / VCS noise
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Local env & secrets — never bake into an image
+.env
+**/.env
+
+# Infra/docs not needed by the Maven build (keeps the build cache stable)
+kind/
+docker-compose.yml
+docker-bake.hcl
+*.md
+
+# Logs
+*.log

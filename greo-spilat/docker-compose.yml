@@ -15,8 +15,8 @@ services:
 
   auth-service:
     build:
-      context: ./authentication
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: authentication/Dockerfile
     image: greo-spilat/auth-service:1.0
     container_name: auth-service
     restart: always
@@ -29,8 +29,8 @@ services:
 
   user-service:
     build:
-      context: ./users
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: users/Dockerfile
     image: greo-spilat/user-service:1.0
     container_name: user-service
     restart: always
@@ -44,8 +44,8 @@ services:
 
   event-service:
     build:
-      context: ./events
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: events/Dockerfile
     image: greo-spilat/event-service:1.0
     container_name: event-service
     restart: always
@@ -58,8 +58,8 @@ services:
 
   notifications-service:
     build:
-      context: ./notifications
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: notifications/Dockerfile
     image: greo-spilat/notifications-service:1.0
     container_name: notification-service
     restart: always
@@ -72,8 +72,8 @@ services:
 
   comments-service:
     build:
-      context: ./comments
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: comments/Dockerfile
     image: greo-spilat/comments-service:1.0
     container_name: comment-service
     restart: always
@@ -86,8 +86,8 @@ services:
 
   join-service:
     build:
-      context: ./join
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: join/Dockerfile
     image: greo-spilat/join-service:1.0
     container_name: join-service
     restart: always
